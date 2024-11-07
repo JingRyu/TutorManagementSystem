@@ -1,0 +1,24 @@
+/*  ----- Table ----- */
+h, td {
+    border: 1px solid black;
+    padding: 10px;
+    text-align: center;
+}
+
+/* Remove border and outline from <a> tags inside <td> */
+td a {
+    border: none;             /* Removes any border */
+    outline: none;            /* Removes outline */
+    text-decoration: none;    /* Removes underline */
+    color: blue;              /* Sets the link color to blue */
+}
+
+/* hover effect to links */
+td a:hover {
+    color: greenyellow;          /* Changes color when hovered */
+    cursor: pointer;         /* Changes cursor to hand icon */
+}
+
+
+
+
