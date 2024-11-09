@@ -2,22 +2,54 @@
 <html>
 <head>
 <link href="style.css" rel="stylesheet" type="text/css" /> 
+  <h1>TeachMaster</h1>
+  <nav>
+    <a href="index.html">HomePage</a>
+    <a href="Tutor.html">Tutors</a>
+    <a href="Student.html">Students</a>
+    <a href="Course.html">Courses</a>
+    <a href="FS.html">Financial Summaries</a>
+  </nav>
+  <script language="JavaScript">
+    function showPage(action) {
+            
+      if (action == 'insert'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'block';
+				document.getElementById('update').style.display = 'none';
+				document.getElementById('delete').style.display = 'none';
+			}
+			else if (action == 'update'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'none';
+				document.getElementById('update').style.display = 'block';
+				document.getElementById('delete').style.display = 'none';
+			}
+			else if (action == 'delete'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'none';
+				document.getElementById('update').style.display = 'none';
+				document.getElementById('delete').style.display = 'block';
+			}
+			else { //by default display browse
+				document.getElementById('browse').style.display = 'block';
+				document.getElementById('insert').style.display = 'none';
+				document.getElementById('update').style.display = 'none';
+				document.getElementById('delete').style.display = 'none';
+			}
+		}
+    function newTutor() { showPage('insert');}
+    function deleteTutor(tutorID) {showPage('delete');}
+    function updateTutor(tutorID) {showPage('update');}
+    function browseTutors() {showPage ('browse');}
+    </script>
 </head>
 
-<body>
-    <header>
-        <h1><strong>Tutor Management System</strong></h1>
-    </header>
 
-    <nav>
-        <a href="Tutor.html">Tutors</a>
-        <a href="Student.html">Students</a>
-        <a href="Course.html">Courses</a>
-        <a href="FS.html">Financial Summaries</a>
-    </nav>
-
-    <h2><strong>Tutors</strong></h2>
-    <a href="#">Create</a>
+<body onload="browseTutors()">
+<h2><strong>Tutors</strong></h2>
+<div id="browse">
+    <a href="#" onClick="newTutor()">Create</a>
     <table>
         <tr>
           <th>ID</th>
@@ -38,8 +70,8 @@
           <td>540000</td>
           <td>3.75</td>
           <td>3.75</td>
-          <td><a href="#">Edit</a></td>
-          <td><a href="#">Delete</a></td>
+          <td><a href="#" onclick = "updateTutor('this.tutorID')">Edit</a></td>
+          <td><a href="#" onclick="deleteTutor('this.tutorID')">Delete</a></td>
         </tr>
         <tr>
            <td>2</td>
@@ -50,8 +82,8 @@
            <td>320000</td>
            <td>4.5</td>
            <td>0.1</td>
-           <td><a href="#">Edit</a></td>
-        <td><a href="#">Delete</a></td>
+           <td><a href="#" onclick = "updateTutor('this.tutorID')">Edit</a></td>
+          <td><a href="#" onclick="deleteTutor('this.tutorID')">Delete</a></td>
         </tr>
         <tr>
            <td>3</td>
@@ -62,8 +94,8 @@
            <td>80000</td>
            <td>4.9</td>
            <td>0.5</td>
-           <td><a href="#">Edit</a></td>
-        <td><a href="#">Delete</a></td>
+           <td><a href="#" onclick = "updateTutor('this.tutorID')">Edit</a></td>
+          <td><a href="#" onclick="deleteTutor('this.tutorID')">Delete</a></td>
         </tr>
         <tr>
             <td>4</td>
@@ -74,10 +106,65 @@
             <td>70000</td>
             <td>4.8</td>
             <td>0.35</td>
-            <td><a href="#">Edit</a></td>
-          <td><a href="#">Delete</a></td>
+            <td><a href="#" onclick = "updateTutor('this.tutorID')">Edit</a></td>
+          <td><a href="#" onclick="deleteTutor('this.tutorID')">Delete</a></td>
         </tr>
       </table>
-</body>
+</div>
 
+<!---Add new Tutor-->
+<p>&nbsp;</p>
+<div id="insert">
+      <form method="POST" id="addTutor">
+        <fieldset class="fields">
+        <legend><strong>Add New Tutor</strong></legend>
+        <label> First Name </label> <input type="text">
+        <label> Last Name </label> <input type="text">
+        <label> Phone Number </label> <input type="number">
+        <label> Experience </label> <input type="number">
+      </fieldset>
+      <input class="btn" type="submit" id="addTutor" value="Add">
+      <input class="btn" type="button" value="cancel" onClick="browseTutors()">
+      </form>
+</div>
+<!---Add new Tutor-->
+
+<!---Update new Tutor-->
+<p>&nbsp;</p>
+<div id="update">
+  <form method="POST" id="updateTutor">
+        <fieldset class="fields">
+          <input type="hidden" name="tutorID" id="updatetutorID" value="1">
+        <legend><strong>Update Tutor</strong></legend>
+        <label> ID </label> 1:
+        <label> First Name </label> <input type="text" value = "Jane">
+        <label> Last Name </label> <input type="text" value = "Doe">
+        <label> Phone Number </label> <input type="number" value = "1914567890">
+        <label> Experience (Approx. years) </label> <input type="number" value = "5">
+        <label> Revenue Generated </label> <input type="number" value = "540000">
+        <label> Average Student Satisfaction </label> <input type="number" value = "3.75">
+        <label> Average Student Grade Improvement </label> <input type="number" value = "3.75">
+      </fieldset>
+      <input class="btn" type="submit" id="addTutor" value="Update">
+          <input class="btn" type="button" value="cancel" onClick="browseTutors()">
+      </form>
+</div>
+<!---Update new Tutor-->
+
+<!---Delete Tutor-->
+<p>&nbsp;</p>
+<div id = "delete">
+    <form method="POST" id="deleteTutor">
+      <legend><strong>Delete Tutor</strong></legend>
+      <fieldset class="fields">
+        <p>Are you sure you wish to delete the following?</p>
+        <input type="hidden" name="locationID" id="deleteLocationID" value="1">
+        <label><strong>Tutor Name:</strong> Jane Doe</label>
+      </fieldset>
+      <input class="btn" type="submit" id="DeleteTutor" value="Continue">
+      <input class="btn" type="button" value="cancel" onClick="browseTutors()">
+    </form>
+</div>
+<!---Delete Tutor-->
+</body>
 </html>
