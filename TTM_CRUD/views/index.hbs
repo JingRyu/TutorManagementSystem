@@ -1,0 +1,71 @@
+<!-- index.hbs -->
+<h1>The server is running!</h1>
+<p>If you see this text, the server is <strong>definitely</strong> working!</p>
+
+{{!-- Create a table --}}
+<table id="tutor-table">
+
+    {{!-- Header section --}}
+    <thead>
+
+        {{!-- For just the first row, we print each key of the row object as a header cell so we
+        know what each column means when the page renders --}}
+        <tr>
+            {{#each data.[0]}}
+            <th>
+                {{@key}}
+            </th>
+            {{/each}}
+        </tr>
+    </thead>
+
+    {{!-- Body section --}}
+    <tbody>
+
+        {{!-- For each row, print the id, fname, lname, homeworld and age, in order --}}
+        {{#each data}}
+        <tr>
+            <td>{{this.tutorID}}</td>
+            <td>{{this.firstName}}</td>
+            <td>{{this.lastName}}</td>
+            <td>{{this.phoneNum}}</td>
+            <td>{{this.tutorExperience}}</td>
+            <td>{{this.revenueGenerated}}</td>
+            <td>{{this.averageStudentSatisfaction}}</td>
+            <td>{{this.averageStudentGradeImprovement}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+{{!-- Form to add a record to the table using AJAX --}}
+<h2>Adding A New Tutor</h2>
+<p>To add a new Tutor, please enter their information below and click 'Submit'!</p>
+<form id="add-tutor">
+
+    <label for="input-fname">First Name: </label>
+    <input type="text" name="input-fname" id="input-fname">
+    
+    <label for="input-lname">Last Name: </label>
+    <input type="text" name="input-lname" id="input-lname">
+
+    <label for="input-number">Phone Number: </label>
+    <input type="number" name="input-number" id="input-number">
+
+    <label for="input-experience">Experience: </label>
+    <input type="number" name="input-experience" id="input-experience">
+
+    <label for="input-revenue">Revenue Generated: </label>
+    <input type="number" name="input-revenue" id="input-revenue">
+
+    <label for="input-rating">Student Rating: </label>
+    <input type="number" name="input-rating" id="input-rating">
+
+    <label for="input-grade">Grade Improvement: </label>
+    <input type="number" name="input-grade" id="input-grade">
+
+    <input type="submit">
+</form>
+
+{{!-- Embed our javascript to handle the DOM manipulation and AJAX request --}}
+<script src="./js/add_tutor.js"></script>
