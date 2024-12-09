@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <h1>TeachMaster</h1>
+    <nav>
+        <a href="/">HomePage</a>
+        <a href="/tutor">Tutors</a>
+        <a href="/student">Students</a>
+        <a href="/course">Courses</a>
+        <a href="/FS">Financial Summaries</a>
+        <a href="/tutor-course">Courses Taught by Tutor</a>
+        <a href="/tutor-student">Students Taught by Tutor</a>
+        <a href="/course-student">Students Enrolled in Course</a>
+    </nav>
+
+    {{!-- Citation for the following DELETE:
+    Date: 12/10/2024
+    Adapted from:
+    Source URL:
+    https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%207%20-%20Dynamically%20Deleting%20Data --}}
+    {{!-- Create a table --}}
+    <table id="tutors-has-students-table">
+        <thead>
+            <tr>
+                <th>tutorsHasStudents ID</th>
+                <th>Tutor ID</th>
+                <th>Tutor's Name</th>
+                <th>Student ID</th>
+                <th>Student's Name</th>
+                <th>Student Satisfaction</th>
+                <th>Student Grade Improvement</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{!-- For each row, print in order --}}
+            {{#each data}}
+            <tr data-value={{this.tutorsHasStudentsID}}>
+                <td>{{this.tutorsHasStudentsID}}</td>
+                <td data-tutorStudent-tutorID={{this.tutorID}}>{{this.tutorID}}</td>
+                <td>{{this.tutorName}}</td>
+                <td data-tutorStudent-studentID={{this.studentID}}>{{this.studentID}}</td>
+                <td>{{this.studentName}}</td>
+                <td>{{this.studentSatisfaction}}</td>
+                <td>{{this.studentGradeImprovement}}</td>
+                <td><button onclick="deleteTutorsHasStudents({{this.tutorsHasStudentsID}})">Delete</button></td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+    <script src="/js/delete_tutors_has_students.js"></script>
+
+
+
+    {{!-- Citation for the following ADD:
+    Date: 12/10/2024
+    Adapted from:
+    Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%205%20-%20Adding%20New%20Data
+    --}}
+    {{!-- Form to add a record to the table using AJAX --}}
+    <form id="add-tutors-has-students-form-ajax">
+        <fieldset style="width:1000px">
+            <legend><strong>Add Tutors-has-Students Record</strong></legend>
+            Tutor:
+            <select name="input-tutor" id="tutor-tutorStudent-input">
+                <option value="">Select a Tutor</option>
+                {{#each tutors}}{{!-- in app.js, relates to the rows tutors, allows data drom Tutors entity to be
+                populated here --}}
+                <option value="{{this.tutorID}}">{{this.tutorName}}</option>
+                {{/each}}
+            </select>
+
+            Student:
+            <select name="input-student" id="student-tutorStudent-input">
+                <option value="">Select a Student</option>
+                {{#each students}}
+                <option value="{{this.studentID}}">{{this.studentName}}</option>
+                {{/each}}
+            </select>
+
+            <label for="studentSatisfactionInput">Student Satisfaction: </label>
+            <select name="studentSatisfactionInput" id="studentSatisfactionInput" required></select>
+            {{!-- to make only student Satisfaction 1,2,3,4,5 can be selected --}}
+
+            <label for="studentGradeImprovementInput">Student Grade Improvement: </label>
+            <input type="number" name="studentGradeImprovementInput" id="studentGradeImprovementInput" min="0" max="4"
+                step="0.01" required>
+            {{!-- Grade Improvement is limited to 0.00 - 4.00 --}}
+
+            <input type="submit">
+        </fieldset>
+
+        <p></p>
+    </form>
+
+
+    {{!-- Citation for the following UPDATE:
+    Date: 12/10/2024
+    Adapted from:
+    Source URL:
+    https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%208%20-%20Dynamically%20Updating%20Data --}}
+    <form id="update-tutors-has-students-form-ajax">
+        <fieldset style="width:1000px">
+            <legend><strong>Update Tutors-has-Students Record</strong></legend>
+            Tutor:
+            <select name="input-tutor" id="tutor-tutorStudent-update">
+                <option value="">Select a Tutor</option>
+                {{#each tutors}}
+                <option value="{{this.tutorID}}">{{this.tutorName}}</option>
+                {{/each}}
+            </select>
+            Student:
+            <select name="input-student" id="student-tutorStudent-update">
+                <option value="">Select a Student</option>
+                {{#each students}}
+                <option value="{{this.studentID}}">{{this.studentName}}</option>
+                {{/each}}
+            </select>
+
+            <label for="studentSatisfactionInput">Student Satisfaction: </label>
+            <select name="studentSatisfactionInput" id="studentSatisfactionInput-update" required></select>
+            {{!-- to make only student Satisfaction 1,2,3,4,5 can be selected --}}
+
+            <label for="studentGradeImprovementInput">Student Grade Improvement: </label>
+            <input type="number" name="studentGradeImprovementInput" id="studentGradeImprovementInput-update" min="0"
+                max="4" step="0.01" required>
+            {{!-- Grade Improvement is limited to 0.00 - 4.00 --}}
+
+            <input type="submit">
+        </fieldset>
+
+        <p></p>
+
+    </form>
+
+    <script>
+        // Populate satisfaction 1 2 3 4 5 dropdown
+        let satisfactionDropdownUpdate = document.getElementById("studentSatisfactionInput-update");
+        for (let i = 5; i > 0; i--) {
+            let option = document.createElement("option");
+            option.value = i;
+            option.textContent = i;
+            satisfactionDropdownUpdate.appendChild(option);
+        }
+
+        let satisfactionDropdownInput = document.getElementById("studentSatisfactionInput");
+        for (let i = 5; i > 0; i--) {
+            let option = document.createElement("option");
+            option.value = i;
+            option.textContent = i;
+            studentSatisfactionInput.appendChild(option);
+        }
+    </script>
+
+    <script src="./js/update_tutors_has_students.js"></script>
+
+
+
+
+    {{!-- Citation for the following SEARCH:
+    Date: 12/10/2024
+    Adapted from:
+    Source URL:
+    https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%206%20-%20Dynamically%20Filling%20Dropdowns%20and%20Adding%20a%20Search%20Box
+    --}}
+    <script src="/js/add_tutors_has_students.js"></script>
+
+
+    <form id="search-tutors-has-students-html" method='GET' action='/tutor-student'>
+        <fieldset style="width:1000px">
+            <legend><strong>Search All Students Taught by A Tutor</strong></legend>
+            Search by tutor's last name using the field below. Partial last names are OK too!
+            <p></p>
+            <label for="input-lastName">Search by Tutor's Last Name: </label>
+            <input type="text" name="lastName" id="input-lastName-html-search">
+
+            <input type="submit">
+            <a href='/tutor-student'><button>Reset</button></a>
+        </fieldset>
+    </form>
+
+</html>
