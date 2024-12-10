@@ -1,4 +1,8 @@
-// Get the objects we need to modify
+// Citation for the following CREATE Implementation:
+// Date: 12/10/2024
+// Adapted from:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%205%20-%20Adding%20New%20Data
+
 let addFSForm = document.getElementById('add-fs-form-ajax');
 
 // Modify the objects we need
@@ -65,6 +69,9 @@ addFSForm.addEventListener("submit", function (e) {
 
     // Send the request and wait for the response
     xhttp.send(JSON.stringify(data));
+    setTimeout(() => {
+        window.location.reload();
+    }, 500);
 
 })
 

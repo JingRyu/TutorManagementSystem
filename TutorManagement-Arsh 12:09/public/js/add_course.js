@@ -1,3 +1,8 @@
+// Citation for the following CREATE Implementation:
+// Date: 12/10/2024
+// Adapted from:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%205%20-%20Adding%20New%20Data
+
 let addCourseForm = document.getElementById('add-course-form-ajax');
 
 // Modify the objects we need
@@ -49,12 +54,14 @@ addCourseForm.addEventListener("submit", function (e) {
 
     // Send the request and wait for the response
     xhttp.send(JSON.stringify(data));
+    setTimeout(() => {
+        window.location.reload();
+    }, 500);
 
 })
 
 
-// Creates a single row from an Object representing a single record from 
-// bsg_people
+// Creates a single row from an Object representing a single record 
 addRowToTable = (data) => {
 
     // Get a reference to the current table on the page and clear it out.
@@ -109,5 +116,4 @@ addRowToTable = (data) => {
     option.text = newRow.courseName;
     option.value = newRow.id;
     selectMenu.add(option);
-    // End of new step 8 code.
 }

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <h2>Students Enrolled in Course</h2>
+    <nav >
+        <a href="/">HomePage</a>
+        <a href="/tutor">Tutors</a>
+        <a href="/student">Students</a>
+        <a href="/course">Courses</a>
+        <a href="/FS">Financial Summaries</a>
+        <a href="/tutor-course">Courses Taught by Tutor</a>
+        <a href="/tutor-student">Students Taught by Tutor</a>
+        <a href="/course-student">Students Enrolled in Course</a>
+    </nav>
+
+    {{!-- Citation for the following DELETE:
+    Date: 12/10/2024
+    Adapted from:
+    Source URL:
+    https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%207%20-%20Dynamically%20Deleting%20Data --}}
+    {{!-- Create a table --}}
+    <table id="courses-has-students-table" style="width:1500x">
+        <thead>
+            <tr>
+                <th>coursesHasStudents ID</th>
+                <th>Course ID</th>
+                <th>Course Name</th>
+                <th>Student ID</th>
+                <th>Student Name</th>
+                <th>Completed Class Hours</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{!-- For each row, print in order --}}
+            {{#each data}}
+            <tr data-value={{this.coursesHasStudentsID}}>
+                <td>{{this.coursesHasStudentsID}}</td>
+                <td data-courseStundets-courseID={{this.courseID}}>{{this.courseID}}</td>
+                <td>{{this.courseName}}</td>
+                <td data-courseStudents-studentID={{this.studentID}}>{{this.studentID}}</td>
+                <td>{{this.studentName}}</td>
+                <td>{{this.completedClassHours}}</td>
+                <td><button onclick="deleteCoursesHasStudents({{this.coursesHasStudentsID}})">Delete</button></td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+    <script src="/js/delete_courses_has_students.js"></script>
+
+
+    {{!-- Citation for the following ADD:
+    Date: 12/10/2024
+    Adapted from:
+    Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%205%20-%20Adding%20New%20Data
+    --}}
+    {{!-- Form to add a record to the table using AJAX --}}
+    <form id="add-courses-has-students-form-ajax">
+        <fieldset style="width:1000px">
+            <legend><strong>Add Courses-has-Students Record</strong></legend>
+            Course:
+            <select name="input-course" id="course-courseStudent-input">
+                <option value="">Select a Course</option>
+                {{#each courses}}
+                <option value="{{this.courseID}}">{{this.courseName}}</option>
+                {{/each}}
+            </select>
+
+            Student:
+            <select name="input-student" id="student-courseStudent-input">
+                <option value="">Select a Student</option>
+                {{#each students}}
+                <option value="{{this.studentID}}">{{this.studentName}}</option>
+                {{/each}}
+            </select>
+
+            <label for="completedClassHoursInput">Completed Class Hours: </label>
+            <input type="number" name="completedClassHoursInput" id="completedClassHoursInput" step="0.1">
+            <input type="submit">
+        </fieldset>
+
+        <p></p>
+    </form>
+
+
+    {{!-- Citation for the following UPDATE:
+    Date: 12/10/2024
+    Adapted from:
+    Source URL:
+    https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%208%20-%20Dynamically%20Updating%20Data --}}
+    <form id="update-courses-has-students-form-ajax">
+        <fieldset style="width:1000px">
+            <legend><strong>Update Courses-has-Students Record</strong></legend>
+            Tutor:
+            <select name="input-course" id="course-courseStudent-update">
+                <option value="">Select a Course</option>
+                {{#each courses}}
+                <option value="{{this.courseID}}">{{this.courseName}}</option>
+                {{/each}}
+            </select>
+
+            Student:
+            <select name="input-student" id="student-courseStudent-update">
+                <option value="">Select a Student</option>
+                {{#each students}}
+                <option value="{{this.studentID}}">{{this.studentName}}</option>
+                {{/each}}
+            </select>
+
+            <label for="completedClassHoursInput">Completed Class Hours: </label>
+            <input type="number" name="completedClassHoursInput" id="completedClassHoursInput-update" step="0.1">
+
+            <input type="submit">
+        </fieldset>
+
+        <p></p>
+
+    </form>
+
+    <script src="./js/update_courses_has_students.js"></script>
+
+
+    {{!-- Citation for the following SEARCH:
+    Date: 12/10/2024
+    Adapted from:
+    Source URL:
+    https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%206%20-%20Dynamically%20Filling%20Dropdowns%20and%20Adding%20a%20Search%20Box
+    --}}
+    <script src="/js/add_courses_has_students.js"></script>
+
+    <form id="search-courses-has-students-html" method='GET' action='/course-student'>
+        <fieldset style="width:1000px">
+            <legend><strong>Search All Courses Enrolled by A Student</strong></legend>
+            Search by student's last name using the field below. Partial last names are OK too!<p></p>
+            <label for="input-lastName">Search by Student's Last Name: </label>
+            <input type="text" name="lastName" id="input-lastName-html-search">
+
+            <input type="submit">
+            <a href='/course-student'><button>Reset</button></a>
+        </fieldset>
+    </form>
+
+</html>

@@ -3,29 +3,32 @@
 // Adapted from:
 // Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%207%20-%20Dynamically%20Deleting%20Data
 
-function deleteTutorsHasCourses(tutorsHasCoursesID) {
-    let link = '/delete-tutors-has-courses-ajax/';
+function deleteCoursesHasStudents(coursesHasStudentsID) {
+    let link = '/delete-courses-has-students-ajax/';
     let data = {
-      id: tutorsHasCoursesID
+      id: coursesHasStudentsID
     };
-    console.log("Sending data:", data); 
+  
     $.ajax({
       url: link,
       type: 'DELETE',
       data: JSON.stringify(data),
       contentType: "application/json; charset=utf-8",
       success: function(result) {
-        deleteRow(tutorsHasCoursesID);
-      }
+        deleteRow(coursesHasStudentsID);
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        console.log("Error:", jqXHR.responseText);
+    }
     });
   }
   
-  function deleteRow(tutorsHasCoursesID){
-      let table = document.getElementById("tutors-has-courses-table");
+  function deleteRow(coursesHasStudentsID){
+      let table = document.getElementById("courses-has-students-table");
       for (let i = 0, row; row = table.rows[i]; i++) {
                //iterate through rows
        //rows would be accessed using the "row" variable assigned in the for loop
-         if (table.rows[i].getAttribute("data-value") == tutorsHasCoursesID) {
+         if (table.rows[i].getAttribute("data-value") == coursesHasStudentsID) {
             table.deleteRow(i);
               break;
          }

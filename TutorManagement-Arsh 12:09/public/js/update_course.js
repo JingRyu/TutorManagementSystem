@@ -1,3 +1,8 @@
+// Citation for the following UPDATE Implementation:
+// Date: 12/10/2024
+// Adapted from:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%208%20-%20Dynamically%20Updating%20Data
+
 // Get the objects we need to modify
 let updateCourseForm = document.getElementById('update-course-form-ajax');
 
@@ -19,7 +24,6 @@ updateCourseForm.addEventListener("submit", function (e) {
     let hoursValue = inputHours.value;
     
     
-    // currently the database table for bsg_people does not allow updating values to NULL
     // so we must abort if being bassed NULL for homeworld
 
 
@@ -51,6 +55,9 @@ updateCourseForm.addEventListener("submit", function (e) {
 
     // Send the request and wait for the response
     xhttp.send(JSON.stringify(data));
+    setTimeout(() => {
+        window.location.reload();
+    }, 500);
 
 })
 
@@ -75,4 +82,5 @@ function updateRow(data, courseID){
             td.innerHTML = parsedData[0].name; 
        }
     }
+   
 }

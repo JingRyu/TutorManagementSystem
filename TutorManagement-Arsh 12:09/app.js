@@ -1,15 +1,19 @@
-//  All code is based on the CS 340 starter code--no exceptions
 // App.js
+
 /*
     SETUP
 */
+// Citation for the following Set Up:
+// Date: 12/10/2024
+// Adapted from:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%200%20-%20Setting%20Up%20Node.js
 
-var express = require('express');   // express library for the web server
+var express = require('express');   // We are using the express library for the web server
 
 var app     = express();            // We need to instantiate an express object to interact with the server in our code
 app.use(express.static('public'));
-app.use(express.json()); 
-PORT        = 43000;                 // Set a port number at the top so it's easy to change in the future
+app.use(express.json()); // Parse JSON body
+PORT        = 43635;                 // Set a port number at the top so it's easy to change in the future
 
 const { engine } = require('express-handlebars');
 var exphbs = require('express-handlebars');     // Import express-handlebars
@@ -27,29 +31,39 @@ app.get('/', function(req, res)
         res.render('index.hbs');                    // Note the call to render() and not send(). Using render() ensures the templating engine
     });     
    
+    
+/*
+    LISTENER
+*/
 
 //<!--------------------------------------------- Tutors.hbs Start---------------------------------------------------->//
-// For entity Tutors
-// Citation for the entity Adapted from the CS 340 starter code, changes made as appropriate for our project 
-// URL : https://github.com/osu-cs340-ecampus/nodejs-starter-app 
+// GET
+// app.js
 
-// Route allows READ ability for Tutor entity
-
+// Citation for the following GET:
+// Date: 12/10/2024
+// Adapted from:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%204%20-%20Dynamically%20Displaying%20Data
+// GET ROUTES
 app.get('/tutor', function(req, res)
     {  
-        let query1 = "SELECT * FROM Tutors;";                       // Define our query
+        let query1 = "SELECT * FROM Tutors;";               // Define our query
 
-        db.pool.query(query1, function(error, rows, fields){        // Execute the query
+        db.pool.query(query1, function(error, rows, fields){    // Execute the query
 
-            res.render('Tutors', {data: rows});                  
-        })                                                      
-    });                                                         
+            res.render('Tutors', {data: rows});                  // Render the index.hbs file, and also send the renderer
+        })                                                      // an object where 'data' is equal to the 'rows' we
+    });                                                         // received back from the query
 
-// Route allows CREATE ability
+// Citation for the following POST:
+// Date: 12/10/2024
+// Adapted from:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%200%20-%20Setting%20Up%20Node.js
+// POST ROUTES
 app.post('/add-tutor-ajax', function(req, res) 
 { 
-    console.log("Received data:", req.body); // for trouble-shooting purposes; prints incoming data
-   
+    console.log("Received data:", req.body);
+    // Capture the incoming data and parse it back to a JS object
     let data = req.body;
 
     // Capture NULL values
@@ -71,13 +85,13 @@ app.post('/add-tutor-ajax', function(req, res)
         revenue = 'NULL'
     }
 
-    let rating = parseFloat(data.rating);
+    let rating = parseInt(data.rating);
     if (isNaN(rating))
     {
         rating = 'NULL'
     }
 
-    let grade= parseFloat(data.grade);
+    let grade= parseInt(data.grade);
     if (isNaN(grade))
     {
         grade = 'NULL'
@@ -96,7 +110,7 @@ app.post('/add-tutor-ajax', function(req, res)
         }
         else
         {
-            // If there was no error, perform a SELECT * on Tutors
+            // If there was no error, perform a SELECT * on bsg_people
             query2 = `SELECT * FROM Tutors;`;
             db.pool.query(query2, function(error, rows, fields){
 
@@ -117,11 +131,15 @@ app.post('/add-tutor-ajax', function(req, res)
     })
 });
 
-// Route allows DELETE ability
+// Citation for the following DELETE:
+// Date: 12/10/2024
+// Adapted from:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%207%20-%20Dynamically%20Deleting%20Data
+// DELETE ROUTES
 app.delete('/delete-tutor-ajax/', function(req,res,next){
     let data = req.body;
 
-    console.log("Received data:", data);  
+    console.log("Received data:", data);  // Log incoming data to verify
 
     let tutorID = parseInt(data.id);  // Convert `id` to a number
 
@@ -162,22 +180,24 @@ app.delete('/delete-tutor-ajax/', function(req,res,next){
               }
   })});
 
-//Route handles Update functions 
+// Citation for the following PUT:
+// Date: 12/10/2024
+// Adapted from:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%208%20-%20Dynamically%20Updating%20Data
+// PUT ROUTES
 app.put('/put-tutor-ajax', function(req,res,next){
     let data = req.body;
   
     let number = parseInt(data.number);
     let tutor = parseInt(data.fullname);
     let experience = parseInt(data.experience);
-    let revenue = parseInt(data.revenue);
-    let satisfaction = parseFloat(data.satisfaction);
-    let grade = parseFloat(data.grade);
-    console.log("data:" , data);
-    let queryUpdateNumber = `UPDATE Tutors SET phoneNum = ?, tutorExperience = ?, revenueGenerated = ?, averageStudentSatisfaction = ? , averageStudentGradeImprovement = ? WHERE Tutors.tutorID = ?`;
+    let revenue = parseInt(data.revenue)
+  
+    let queryUpdateNumber = `UPDATE Tutors SET phoneNum = ?, tutorExperience = ?, revenueGenerated = ? WHERE Tutors.tutorID = ?`;
     
   
           // Run the 1st query
-          db.pool.query(queryUpdateNumber, [number, experience, revenue, satisfaction, grade, tutor], function(error, rows, fields){
+          db.pool.query(queryUpdateNumber, [number, experience, revenue, tutor], function(error, rows, fields){
               if (error) {
   
               // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
@@ -189,13 +209,12 @@ app.put('/put-tutor-ajax', function(req,res,next){
   
 //<!--------------------------------------------- Tutors.hbs End ---------------------------------------------------->//
 
-//------------------------------------------------------Courses.hbs Start-----------------------------------------------------//
-
-// For entity Courses
-// Citation for the entity Adapted from the CS 340 starter code, changes made as appropriate for our project 
-// URL : https://github.com/osu-cs340-ecampus/nodejs-starter-app 
-
-//  READ ability for Courses
+//------------------------------------------------------Courses.hbs Start-----------------------------------------------------
+// Citation for the following GET:
+// Date: 12/10/2024
+// Adapted from:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%204%20-%20Dynamically%20Displaying%20Data
+// GET ROUTES
 app.get('/course', function(req, res)
     {  
         let query1 = "SELECT * FROM Courses;";               // Define our query
@@ -207,8 +226,12 @@ app.get('/course', function(req, res)
     });                                                         // received back from the query
 
 
-//  CREATE ability for Courses
-
+// app.js - ROUTES section
+// Citation for the following POST:
+// Date: 12/10/2024
+// Adapted from:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%200%20-%20Setting%20Up%20Node.js
+// POST ROUTES
 app.post('/add-course-ajax', function(req, res) 
 {
     // Capture the incoming data and parse it back to a JS object
@@ -247,7 +270,7 @@ app.post('/add-course-ajax', function(req, res)
         }
         else
         {
-            // If there was no error, perform a SELECT * on Courses
+            // If there was no error, perform a SELECT * on bsg_people
             query2 = `SELECT * FROM Courses;`;
             db.pool.query(query2, function(error, rows, fields){
 
@@ -268,14 +291,17 @@ app.post('/add-course-ajax', function(req, res)
     })
 });
 
-//  DELETE ability for Courses
-
+// Citation for the following DELETE:
+// Date: 12/10/2024
+// Adapted from:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%207%20-%20Dynamically%20Deleting%20Data
+// DELETE ROUTES
 app.delete('/delete-course-ajax/', function(req,res,next){
     let data = req.body;
 
     let courseID = parseInt(data.id);
 
-    console.log("Received data:", data);  
+    console.log("Received data:", data);  // Log incoming data to verify
 
     let delete_Course = `DELETE FROM Courses WHERE courseID = ?`;
     let deleteStudent_Course= `DELETE FROM Courses_has_Students WHERE courseID = ?`;
@@ -314,7 +340,11 @@ app.delete('/delete-course-ajax/', function(req,res,next){
               }
   })});
 
-  //  UPDATE ability for Courses
+  // Citation for the following PUT:
+// Date: 12/10/2024
+// Adapted from:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%208%20-%20Dynamically%20Updating%20Data
+// PUT ROUTES
   app.put('/put-course-ajax', function(req,res,next){
     let data = req.body;
     
@@ -336,13 +366,14 @@ app.delete('/delete-course-ajax/', function(req,res,next){
   
   })});
 //------------------------------------------------------Courses.hbs End-----------------------------------------------------
-
-//<!--------------------------------------------- Students.hbs Start---------------------------------------------------->//
-// For entity Students
-// Citation for the entity Adapted from the CS 340 starter code, changes made as appropriate for our project 
-// URL : https://github.com/osu-cs340-ecampus/nodejs-starter-app 
-
-//  READ ability for Students
+  //<!--------------------------------------------- Students.hbs Start---------------------------------------------------->//
+// GET
+// app.js
+// Citation for the following GET:
+// Date: 12/10/2024
+// Adapted from:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%204%20-%20Dynamically%20Displaying%20Data
+// GET ROUTES
 app.get('/student', function(req, res)
 {  
     let query1 = "SELECT * FROM Students;";               // Define our query
@@ -353,7 +384,11 @@ app.get('/student', function(req, res)
     })                                                      // an object where 'data' is equal to the 'rows' we
 });                                                         // received back from the query
 
-/// CREATE ability for Courses
+// Citation for the following POST:
+// Date: 12/10/2024
+// Adapted from:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%200%20-%20Setting%20Up%20Node.js
+// POST ROUTES
 app.post('/add-student-ajax', function(req, res) 
 { 
 console.log("Received data:", req.body);
@@ -407,11 +442,15 @@ db.pool.query(query1, function(error, rows, fields){
 })
 });
 
-//  DELETE ability for Courses
+// Citation for the following DELETE:
+// Date: 12/10/2024
+// Adapted from:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%207%20-%20Dynamically%20Deleting%20Data
+// DELETE ROUTES
 app.delete('/delete-student-ajax/', function(req,res,next){
 let data = req.body;
 
-console.log("Received data:", data);  
+console.log("Received data:", data);  // Log incoming data to verify
 
 let studentID = parseInt(data.id);  // Convert `id` to a number
 
@@ -452,13 +491,18 @@ let deleteTutor_Student= `DELETE FROM Tutors_has_Students WHERE studentID = ?`;
           }
 })});
 
-//  UPDATE ability for Courses
+// Citation for the following PUT:
+// Date: 12/10/2024
+// Adapted from:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%208%20-%20Dynamically%20Updating%20Data
+// PUT ROUTES
 app.put('/put-student-ajax', function(req,res,next){
 let data = req.body;
 
 let number = parseInt(data.number);
 let student = parseInt(data.fullname);
 let tuition = parseInt(data.tuition);
+
 
 let queryUpdateNumber = `UPDATE Students SET phoneNum = ?, tuitionPayment = ? WHERE Students.studentID = ?`;
 
@@ -473,18 +517,19 @@ let queryUpdateNumber = `UPDATE Students SET phoneNum = ?, tuitionPayment = ? WH
           }
 
 })});
-//<!--------------------------------------------- Students.hbs End---------------------------------------------------->//
+  //<!--------------------------------------------- Students.hbs End---------------------------------------------------->//
 
 //<!--------------------------------------------- FS.hbs Start ---------------------------------------------------->//
-// For entity Financial  Summaries
-// Citation for the entity Adapted from the CS 340 starter code, changes made as appropriate for our project 
-// URL : https://github.com/osu-cs340-ecampus/nodejs-starter-app 
-
-//  READ ability for Financial Summaries
-
+// GET
+// app.js
+// Citation for the following GET:
+// Date: 12/10/2024
+// Adapted from:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%204%20-%20Dynamically%20Displaying%20Data
+// GET ROUTES
 app.get('/FS', function(req, res) {
     let query1 = "SELECT * FROM FinancialSummaries fs JOIN Tutors t ON fs.tutorID= t.tutorID";
-    let query2 = 'SELECT tutorID, firstName, lastName FROM Tutors';               
+    let query2 = 'SELECT tutorID, firstName, lastName FROM Tutors';               // Define our query
 
     db.pool.query(query1, function(error, rows, fields) {
         if (error) {
@@ -500,14 +545,18 @@ app.get('/FS', function(req, res) {
 
             res.render('FS.hbs', {
                 financialSummaries: rows,  // Financial summary data
-                tutors: tutorRows          // data from Tutors table 
+                tutors: tutorRows 
             });
         });
     });
 });
 
 
-// CREATE ability for Financial Summaries
+// Citation for the following POST:
+// Date: 12/10/2024
+// Adapted from:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%200%20-%20Setting%20Up%20Node.js
+// POST ROUTES
 app.post('/add-fs-ajax', function(req, res) 
 { 
     console.log("Received data:", req.body);
@@ -527,7 +576,7 @@ app.post('/add-fs-ajax', function(req, res)
         }
         else
         {
-            // If there was no error, perform a SELECT * on FS
+            // If there was no error, perform a SELECT * on bsg_people
             query2 = `SELECT * FROM FinancialSummaries;`;
             db.pool.query(query2, function(error, rows, fields){
 
@@ -548,7 +597,11 @@ app.post('/add-fs-ajax', function(req, res)
     })
 });
 
-// DELETE ability for Financial Summaries
+// Citation for the following DELETE:
+// Date: 12/10/2024
+// Adapted from:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%207%20-%20Dynamically%20Deleting%20Data
+// DELETE ROUTES
 app.delete('/delete-fs-ajax/', function(req,res,next){
     let data = req.body;
 
@@ -569,7 +622,11 @@ app.delete('/delete-fs-ajax/', function(req,res,next){
               })
   });
 
-// UPDATE ability for Financial Summaries
+  // Citation for the following PUT:
+// Date: 12/10/2024
+// Adapted from:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%208%20-%20Dynamically%20Updating%20Data
+// PUT ROUTES
 app.put('/put-fs-ajax', function(req,res,next){
     let data = req.body;
     
@@ -580,7 +637,7 @@ app.put('/put-fs-ajax', function(req,res,next){
     let revenue = parseInt(data.revenue);
     let commission = parseInt(data.commission);
     let cost = parseInt(data.cost);
-    let renewal = parseFloat(data.renewal);
+    let renewal = parseInt(data.renewal);
   
     let queryUpdateNumber = `UPDATE FinancialSummaries SET tutorID = ?, financialPeriod = ?, contractRate = ?, revenueGenerated=?, commissionDue = ?, courseCost = ?, renewalRate = ? WHERE FinancialSummaries.financialSummaryID = ?`;
     
@@ -597,7 +654,11 @@ app.put('/put-fs-ajax', function(req,res,next){
   })});
 //<!--------------------------------------------- FS.hbs End ---------------------------------------------------->//
 //<!--------------------------------------------- Tutor-Course Start ---------------------------------------------------->//
-
+// Citation for the following GET:
+// Date: 12/10/2024
+// Adapted from:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%204%20-%20Dynamically%20Displaying%20Data
+// GET ROUTES
 app.get('/tutor-course', function(req, res) 
 {
     let query1;
@@ -634,7 +695,7 @@ app.get('/tutor-course', function(req, res)
         queryParams.push(`${lastName}%`);
     }
 
-    // Query 2: Fetch the list of tutors for the dropdown
+    // list of tutors for the dropdown
     let tutor_query = `
         SELECT 
             Tutors.tutorID AS tutorID,
@@ -651,7 +712,7 @@ app.get('/tutor-course', function(req, res)
         ORDER BY Courses.courseID ASC;
     `;
 
-    // Execute Query 1
+    // Query 1
     db.pool.query(query1, queryParams, function (error, rows, fields) {
         if (error) {
             console.log(error);
@@ -660,7 +721,7 @@ app.get('/tutor-course', function(req, res)
         }
         let data = rows; // Save table data
 
-        // Execute Tutor Query
+        //Tutor Query
         db.pool.query(tutor_query, function (error, rows, fields) {
             if (error) {
                 console.log(error);
@@ -669,7 +730,7 @@ app.get('/tutor-course', function(req, res)
             }
             let tutors = rows; // Save tutors data
 
-            // Execute Course Query
+            //Course Query
             db.pool.query(course_query, function (error, rows, fields) {
                 if (error) {
                     console.log(error);
@@ -678,33 +739,34 @@ app.get('/tutor-course', function(req, res)
                 }
                 let courses = rows; // Save courses data
 
-                // Render the page with all data
-                res.render('Tutor_has_Courses', { data: data, tutors: tutors, courses: courses });
+                // Render
+                res.render('Tutor_has_Courses.hbs', { data: data, tutors: tutors, courses: courses });
             });
         });
     });
 });
 
+
+// Citation for the following POST:
+// Date: 12/10/2024
+// Adapted from:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%200%20-%20Setting%20Up%20Node.js
+// POST ROUTES
 app.post('/add-tutors-has-courses-form-ajax', function(req, res) 
 {
     console.log("Received data:", req.body); // Log incoming data
     // Capture the incoming data and parse it back to a JS object
     let data = req.body;
 
-    // Create the query and run it on the database
     query1 = `INSERT INTO Tutors_has_Courses (tutorsHasCoursesID, tutorID, courseID) VALUES ('${data.tutorsHasCoursesID}', '${data.tutorID}', ${data.courseID})`;
     db.pool.query(query1, function(error, rows, fields){
 
-        // Check to see if there was an error
         if (error) {
-
-            // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
             console.log(error)
             res.sendStatus(400);
         }
         else
         {
-            // If there was no error, perform a SELECT * on bsg_people
             query2 = `SELECT * FROM Tutors_has_Courses;`;
             db.pool.query(query2, function(error, rows, fields){
 
@@ -725,41 +787,37 @@ app.post('/add-tutors-has-courses-form-ajax', function(req, res)
     })
 });
 
-// Delete a Tutors-Has-Courses relationship
-app.delete('/delete-tutors-has-courses-ajax/', function(req, res) {
+// Citation for the following DELETE:
+// Date: 12/10/2024
+// Adapted from:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%207%20-%20Dynamically%20Deleting%20Data
+// DELETE ROUTES
+app.delete('/delete-tutors-has-courses-ajax/', function(req, res, next) {
     let data = req.body;
-
-    console.log("Received DELETE request for ID:", data.id);
-
     let tutorsHasCoursesID = parseInt(data.id);
-
-    if (isNaN(tutorsHasCoursesID)) {
-        console.log("Invalid ID received");
-        res.sendStatus(400);
-        return;
-    }
-
-    let deleteTutorsHasCoursesQuery = `DELETE FROM Tutors_has_Courses WHERE tutorsHasCoursesID = ?`;
+    let deleteTutorsHasCoursesQuery = `DELETE FROM Tutors_has_Courses WHERE tutorsHasCoursesID = ?;`;
 
     db.pool.query(deleteTutorsHasCoursesQuery, [tutorsHasCoursesID], function(error, rows, fields) {
         if (error) {
             console.log("Error executing query:", error);
             res.sendStatus(400);
         } else {
-            console.log("Successfully deleted record with ID:", tutorsHasCoursesID);
             res.sendStatus(204);
         }
     });
 });
 
-
-
 //<!--------------------------------------------- Tutor-Course End ---------------------------------------------------->//
 
 //<!--------------------------------------------- Tutor-Student Start ---------------------------------------------------->//
+// Citation for the following GET:
+// Date: 12/10/2024
+// Adapted from:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%204%20-%20Dynamically%20Displaying%20Data
+// GET ROUTES
 app.get('/tutor-student', function(req, res) 
 {
-    // Define Query 1
+    //  Query 1
     let query1;
     let queryParams = [];
 
@@ -798,7 +856,7 @@ app.get('/tutor-student', function(req, res)
         queryParams.push(`${lastName}%`);
     }
 
-    // Query 2: Fetch the list of tutors for the dropdown
+    // list of tutors for the dropdown
     let tutor_query = `
         SELECT 
             Tutors.tutorID AS tutorID,
@@ -815,7 +873,7 @@ app.get('/tutor-student', function(req, res)
         ORDER BY Students.studentID ASC;
     `;
 
-    // Execute Query 1
+    // Query 1
     db.pool.query(query1, queryParams, function (error, rows, fields) {
         if (error) {
             console.log(error);
@@ -824,7 +882,7 @@ app.get('/tutor-student', function(req, res)
         }
         let data = rows; // Save table data
 
-        // Execute Tutor Query
+        //  Tutor Query
         db.pool.query(tutor_query, function (error, rows, fields) {
             if (error) {
                 console.log(error);
@@ -833,7 +891,7 @@ app.get('/tutor-student', function(req, res)
             }
             let tutors = rows; // Save tutors data
 
-            // Execute Student Query
+            // Student Query
             db.pool.query(student_query, function (error, rows, fields) {
                 if (error) {
                     console.log(error);
@@ -842,8 +900,8 @@ app.get('/tutor-student', function(req, res)
                 }
                 let students = rows; // Save students data
 
-                // Render the index page with all data
-                res.render('Tutor_has_Students', { data: data, tutors: tutors, students: students });
+                // Render 
+                res.render('Tutor_has_Students.hbs', { data: data, tutors: tutors, students: students });
             });
         });
     });
@@ -853,6 +911,11 @@ app.get('/tutor-student', function(req, res)
     LISTENER
 */
 
+// Citation for the following POST:
+// Date: 12/10/2024
+// Adapted from:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%200%20-%20Setting%20Up%20Node.js
+// POST ROUTES
 app.post('/add-tutors-has-students-form-ajax', function(req, res) 
 {
     console.log("Received data:", req.body); // Log incoming data
@@ -893,6 +956,11 @@ app.post('/add-tutors-has-students-form-ajax', function(req, res)
     })
 });
 
+// Citation for the following DELETE:
+// Date: 12/10/2024
+// Adapted from:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%207%20-%20Dynamically%20Deleting%20Data
+// DELETE ROUTES
 app.delete('/delete-tutors-has-students-ajax/', function(req, res, next) {
     let data = req.body;
     let tutorsHasStudentsID = parseInt(data.id);
@@ -908,30 +976,256 @@ app.delete('/delete-tutors-has-students-ajax/', function(req, res, next) {
     });
 });
 
+// Citation for the following PUT:
+// Date: 12/10/2024
+// Adapted from:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%208%20-%20Dynamically%20Updating%20Data
+// PUT ROUTES
 app.put('/put-tutors-has-students-ajax', function (req, res, next) {
     let data = req.body;
 
-    console.log("Data received:", data); // Debug: Log incoming data
+    let tutorID = parseInt(data.tutorID);
+    let studentID = parseInt(data.studentID);
+    let studentSatisfaction = parseFloat(data.studentSatisfaction);
+    let studentGradeImprovement = parseFloat(data.studentGradeImprovement);
 
-    let query = `
+    if (isNaN(tutorID) || isNaN(studentID) || isNaN(studentSatisfaction) || isNaN(studentGradeImprovement)) {
+        console.log("Invalid input data:", data);
+        return res.sendStatus(400);
+    }
+
+    let queryUpdate = `
         UPDATE Tutors_has_Students 
-        SET studentSatisfaction = ?, studentGradeImprovement = ? 
-        WHERE tutorsHasStudentsID = ?;
+        SET studentSatisfaction = ?, studentGradeImprovement = ?
+        WHERE tutorID = ? AND studentID = ?
     `;
 
-    db.pool.query(query, [data.studentSatisfaction, data.studentGradeImprovement, data.tutorsHasStudentsID], function (error, rows, fields) {
+    // Execute the update query
+    db.pool.query(queryUpdate, [studentSatisfaction, studentGradeImprovement, tutorID, studentID], function (error, rows, fields) {
         if (error) {
-            console.log("Database Error:", error); // Debug: Log database error
+            console.log("Error during update:", error);
             res.sendStatus(400);
         } else {
-            res.status(200).json({
-                studentSatisfaction: data.studentSatisfaction,
-                studentGradeImprovement: data.studentGradeImprovement
+            console.log("Update successful for tutorID:", tutorID, "studentID:", studentID);
+            res.sendStatus(200); 
+        }
+    });
+});
+
+
+//<!--------------------------------------------- Tutor-Student End ---------------------------------------------------->//
+
+//<!--------------------------------------------- Course-Student Start ---------------------------------------------------->//
+// Citation for the following GET:
+// Date: 12/10/2024
+// Adapted from:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%204%20-%20Dynamically%20Displaying%20Data
+// GET ROUTES
+app.get('/course-student', function(req, res) {
+    let query1;
+    let queryParams = [];
+
+    //  
+    if (req.query.lastName === undefined) {
+        query1 = `
+        SELECT 
+            Courses_has_Students.coursesHasStudentsID AS coursesHasStudentsID,
+            Courses_has_Students.courseID AS courseID,
+            Courses.courseName AS courseName,
+            Courses_has_Students.studentID AS studentID,
+            CONCAT(Students.firstName, ' ', Students.lastName) AS studentName,
+            Courses_has_Students.completedClassHours AS completedClassHours
+        FROM Courses_has_Students
+        INNER JOIN Courses ON Courses_has_Students.courseID = Courses.courseID
+        INNER JOIN Students ON Courses_has_Students.studentID = Students.studentID
+        ORDER BY Courses_has_Students.coursesHasStudentsID ASC;
+        `;
+    } else {
+        let lastName = req.query.lastName;
+        query1 = `
+        SELECT 
+            Courses_has_Students.coursesHasStudentsID AS coursesHasStudentsID,
+            Courses_has_Students.courseID AS courseID,
+            Courses.courseName AS courseName,
+            Courses_has_Students.studentID AS studentID,
+            CONCAT(Students.firstName, ' ', Students.lastName) AS studentName,
+            Courses_has_Students.completedClassHours AS completedClassHours
+        FROM Courses_has_Students
+        INNER JOIN Courses ON Courses_has_Students.courseID = Courses.courseID
+        INNER JOIN Students ON Courses_has_Students.studentID = Students.studentID
+        WHERE Students.lastName LIKE ?
+        ORDER BY Courses_has_Students.coursesHasStudentsID ASC;
+        `;
+        queryParams.push(`${lastName}%`);
+    }
+
+    //  fetch courses for dropdown
+    let course_query = `
+        SELECT 
+            Courses.courseID AS courseID,
+            Courses.courseName AS courseName
+        FROM Courses
+        ORDER BY Courses.courseID ASC;
+    `;
+
+    //  fetch students for dropdown
+    let student_query = `
+        SELECT 
+            Students.studentID AS studentID,
+            CONCAT(Students.firstName, ' ', Students.lastName) AS studentName
+        FROM Students
+        ORDER BY Students.studentID ASC;
+    `;
+    //query 1
+    db.pool.query(query1, queryParams, function(error, rows, fields) {
+        if (error) {
+            console.log(error);
+            res.sendStatus(500);
+            return;
+        }
+        let data = rows; // Save main table data
+
+        //  course query
+        db.pool.query(course_query, function(error, rows, fields) {
+            if (error) {
+                console.log(error);
+                res.sendStatus(500);
+                return;
+            }
+            let courses = rows; // Save courses data
+
+            //  student query
+            db.pool.query(student_query, function(error, rows, fields) {
+                if (error) {
+                    console.log(error);
+                    res.sendStatus(500);
+                    return;
+                }
+                let students = rows; // Save students data
+
+                // Render 
+                res.render('Course_has_Students.hbs', { data: data, courses: courses, students: students });
+            });
+        });
+    });
+});
+
+
+// Citation for the following POST:
+// Date: 12/10/2024
+// Adapted from:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%200%20-%20Setting%20Up%20Node.js
+// POST ROUTES
+app.post('/add-courses-has-students-form-ajax', function(req, res) 
+{
+    console.log("Received data:", req.body); // Log incoming data
+    // Capture the incoming data and parse it back to a JS object
+    let data = req.body;
+
+    // Create the query and run it on the database
+    query1 = `INSERT INTO Courses_has_Students (coursesHasStudentsID, courseID, studentID, completedClassHours) VALUES ('${data.coursesHasStudentsID}', '${data.courseID}', ${data.studentID}, ${data.completedClassHours})`;
+    db.pool.query(query1, function(error, rows, fields){
+
+        // Check to see if there was an error
+        if (error) {
+
+            // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+            console.log(error)
+            res.sendStatus(400);
+        }
+        else
+        {
+            // If there was no error, perform a SELECT * on bsg_people
+            query2 = `SELECT * FROM Courses_has_Students;`;
+            db.pool.query(query2, function(error, rows, fields){
+
+                // If there was an error on the second query, send a 400
+                if (error) {
+                    
+                    // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+                    console.log(error);
+                    res.sendStatus(400);
+                }
+                // If all went well, send the results of the query back.
+                else
+                {
+                    res.send(rows);
+                }
+            })
+        }
+    })
+});
+
+// Citation for the following DELETE:
+// Date: 12/10/2024
+// Adapted from:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%207%20-%20Dynamically%20Deleting%20Data
+// DELETE ROUTES
+app.delete('/delete-courses-has-students-ajax/', function(req, res, next) {
+    let data = req.body;
+    let coursesHasStudentsID = parseInt(data.id);
+    let deleteCoursesHasStudentsQuery = `DELETE FROM Courses_has_Students WHERE coursesHasStudentsID = ?;`;
+
+    db.pool.query(deleteCoursesHasStudentsQuery, [coursesHasStudentsID], function(error, rows, fields) {
+        if (error) {
+            console.log("Error executing query:", error);
+            res.sendStatus(400);
+        } else {
+            res.sendStatus(204);
+        }
+    });
+});
+
+// Citation for the following PUT:
+// Date: 12/10/2024
+// Adapted from:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%208%20-%20Dynamically%20Updating%20Data
+// PUT ROUTES
+app.put('/put-courses-has-students-ajax', function (req, res, next) {
+    let data = req.body;
+
+    let courseID = parseInt(data.courseID);
+    let studentID = parseInt(data.studentID);
+    let completedClassHours = parseFloat(data.completedClassHours);
+
+    if (isNaN(courseID) || isNaN(studentID) || isNaN(completedClassHours)) {
+        console.log("Invalid input data:", data);
+        return res.sendStatus(400); 
+    }
+
+    let queryUpdate = `
+        UPDATE Courses_has_Students 
+        SET completedClassHours = ?
+        WHERE courseID = ? AND studentID = ?
+    `;
+
+    db.pool.query(queryUpdate, [completedClassHours, courseID, studentID], function (error, rows, fields) {
+        if (error) {
+            console.log("Error during update:", error);
+            return res.sendStatus(400);
+        } else {
+            console.log(`Update successful for courseID: ${courseID}, studentID: ${studentID}`);
+            
+            let selectUpdatedRow = `
+                SELECT * 
+                FROM Courses_has_Students 
+                WHERE courseID = ? AND studentID = ?
+            `;
+
+            db.pool.query(selectUpdatedRow, [courseID, studentID], function (error, rows, fields) {
+                if (error) {
+                    console.log("Error during select:", error);
+                    return res.sendStatus(400);
+                } else {
+                    res.json(rows);
+                }
             });
         }
     });
 });
-//<!--------------------------------------------- Tutor-Student End ---------------------------------------------------->//
+
+
+//<!--------------------------------------------- Course-Student End ---------------------------------------------------->//
 
 
 app.listen(PORT, function(){            // This is the basic syntax for what is called the 'listener' which receives incoming requests on the specified PORT.

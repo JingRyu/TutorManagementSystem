@@ -22,8 +22,6 @@ CREATE OR REPLACE TABLE `Tutors` (
     `averageStudentSatisfaction` DECIMAL(3, 2),
     `averageStudentGradeImprovement` DECIMAL(3, 2)
 );
--- Reset the AUTO_INCREMENT to continue from the last ID + 1
-ALTER TABLE `Tutors` AUTO_INCREMENT = (SELECT MAX(tutorID) + 1 FROM `Tutors`);
 
 -- Create table for Students entity
 CREATE OR REPLACE TABLE `Students` (
@@ -62,8 +60,9 @@ CREATE OR REPLACE TABLE `Tutors_has_Students` (
     `studentID` INT,
     `studentSatisfaction` DECIMAL(3, 2),
     `studentGradeImprovement` DECIMAL(3, 2),
+    UNIQUE (`tutorID`, `studentID`),
     FOREIGN KEY (`tutorID`) REFERENCES `Tutors`(`tutorID`) ON DELETE CASCADE,
-    FOREIGN KEY (`studentID`) REFERENCES `Students`(`studentID`) ON DELETE SET NULL
+    FOREIGN KEY (`studentID`) REFERENCES `Students`(`studentID`) ON DELETE CASCADE
 );
 
 -- Create table for Tutors_has_Courses entity
@@ -71,16 +70,18 @@ CREATE OR REPLACE TABLE `Tutors_has_Courses` (
     `tutorsHasCoursesID`INT AUTO_INCREMENT PRIMARY KEY,
     `tutorID` INT NOT NULL,
     `courseID` INT ,
+    UNIQUE (`tutorID`, `courseID`),
     FOREIGN KEY (`tutorID`) REFERENCES `Tutors`(`tutorID`) ON DELETE CASCADE,
-    FOREIGN KEY (`courseID`) REFERENCES `Courses`(`courseID`) ON DELETE SET NULL
+    FOREIGN KEY (`courseID`) REFERENCES `Courses`(`courseID`) ON DELETE CASCADE
 );
 
 -- Create table for Courses_has_Students entity
 CREATE OR REPLACE TABLE `Courses_has_Students` (
+    `coursesHasStudentsID`INT AUTO_INCREMENT PRIMARY KEY,
     `courseID` INT NOT NULL,
     `studentID` INT NOT NULL,
     `completedClassHours` INT NOT NULL,
-    PRIMARY KEY (`courseID`, `studentID`),
+    UNIQUE (`courseID`, `studentID`),
     FOREIGN KEY (`courseID`) REFERENCES `Courses`(`courseID`) ON DELETE CASCADE,
     FOREIGN KEY (`studentID`) REFERENCES `Students`(`studentID`) ON DELETE CASCADE
 );
@@ -88,10 +89,10 @@ CREATE OR REPLACE TABLE `Courses_has_Students` (
 -- Adding sample Tutors data
 INSERT INTO `Tutors` (`firstName`, `lastName`, `phoneNum`, `tutorExperience`, `revenueGenerated`, `averageStudentSatisfaction`, `averageStudentGradeImprovement`)
 VALUES
-('Jane', 'Doe', 1914567890, '5 years', 540000, 3.75, 0.25),
-('Mary', 'Jenkins', 1995678901, '3 years', 320000, 4.50, 0.10),
-('Hannibal', 'Lecter', 1966789012, '10 years', 80000, 4.90, 0.50),
-('Will', 'Graham', 1927890123, '7 years', 70000, 4.80, 0.35);
+('Jane', 'Doe', 1914567890, '5', 540000, 3.75, 0.25),
+('Mary', 'Jenkins', 1995678901, '3', 320000, 4.50, 0.10),
+('Hannibal', 'Lecter', 1966789012, '10', 80000, 4.90, 0.50),
+('Will', 'Graham', 1927890123, '7', 70000, 4.80, 0.35);
 
 -- Adding sample Students data
 INSERT INTO `Students` (`firstName`, `lastName`, `phoneNum`, `tuitionPayment`)
@@ -113,19 +114,19 @@ VALUES
 INSERT INTO `FinancialSummaries` (`tutorID`, `financialPeriod`, `contractRate`, `revenueGenerated`, `commissionDue`, `courseCost`, `renewalRate`)
 VALUES
 ((SELECT tutorID FROM Tutors WHERE firstName = 'Jane' AND lastName = 'Doe'), 'Q1 2024', 30, 5000, 500, 2000, 0.85),
-((SELECT tutorID FROM Tutors WHERE firstName = 'Jane' AND lastName = 'Doe'), 'Q1 2024', 25, 6000, 600, 3000, 0.75),
-((SELECT tutorID FROM Tutors WHERE firstName = 'Mary' AND lastName = 'Jenkins'), 'Q2 2024', 35, 5000, 500, 3000, 0.90),
+((SELECT tutorID FROM Tutors WHERE firstName = 'Jane' AND lastName = 'Doe'), 'Q2 2024', 25, 6000, 600, 3000, 0.75),
+((SELECT tutorID FROM Tutors WHERE firstName = 'Mary' AND lastName = 'Jenkins'), 'Q1 2024', 35, 5000, 500, 3000, 0.90),
 ((SELECT tutorID FROM Tutors WHERE firstName = 'Hannibal' AND lastName = 'Lecter'), 'Q2 2024', 28, 6000, 600, 2000, 0.80);
 
 -- Adding sample Tutors_has_Students data
 INSERT INTO `Tutors_has_Students` (`tutorID`, `studentID`, `studentSatisfaction`, `studentGradeImprovement`)
 VALUES
-((SELECT tutorID FROM Tutors WHERE firstName = 'Jane' AND lastName = 'Doe'), (SELECT studentID FROM Students WHERE firstName = 'Martin' AND lastName = 'Smith'), 4.7, 0.2),
-((SELECT tutorID FROM Tutors WHERE firstName = 'Jane' AND lastName = 'Doe'), (SELECT studentID FROM Students WHERE firstName = 'Etta' AND lastName = 'Eaton'), 4.5, 0.1),
-((SELECT tutorID FROM Tutors WHERE firstName = 'Mary' AND lastName = 'Jenkins'), (SELECT studentID FROM Students WHERE firstName = 'Martin' AND lastName = 'Smith'), 4.4, 0.3),
-((SELECT tutorID FROM Tutors WHERE firstName = 'Mary' AND lastName = 'Jenkins'), (SELECT studentID FROM Students WHERE firstName = 'Salem' AND lastName = 'Warner'), 4.8, 0.3),
-((SELECT tutorID FROM Tutors WHERE firstName = 'Hannibal' AND lastName = 'Lecter'), (SELECT studentID FROM Students WHERE firstName = 'Salem' AND lastName = 'Warner'), 4.9, 0.4),
-((SELECT tutorID FROM Tutors WHERE firstName = 'Will' AND lastName = 'Graham'), (SELECT studentID FROM Students WHERE firstName = 'Alondra' AND lastName = 'Gross'), 4.6, 0.1);
+((SELECT tutorID FROM Tutors WHERE firstName = 'Jane' AND lastName = 'Doe'), (SELECT studentID FROM Students WHERE firstName = 'Martin' AND lastName = 'Smith'), 3, 0.2),
+((SELECT tutorID FROM Tutors WHERE firstName = 'Jane' AND lastName = 'Doe'), (SELECT studentID FROM Students WHERE firstName = 'Etta' AND lastName = 'Eaton'), 5, 0.1),
+((SELECT tutorID FROM Tutors WHERE firstName = 'Mary' AND lastName = 'Jenkins'), (SELECT studentID FROM Students WHERE firstName = 'Martin' AND lastName = 'Smith'), 4, 0.3),
+((SELECT tutorID FROM Tutors WHERE firstName = 'Mary' AND lastName = 'Jenkins'), (SELECT studentID FROM Students WHERE firstName = 'Salem' AND lastName = 'Warner'), 5, 0.3),
+((SELECT tutorID FROM Tutors WHERE firstName = 'Hannibal' AND lastName = 'Lecter'), (SELECT studentID FROM Students WHERE firstName = 'Salem' AND lastName = 'Warner'), 4, 0.4),
+((SELECT tutorID FROM Tutors WHERE firstName = 'Will' AND lastName = 'Graham'), (SELECT studentID FROM Students WHERE firstName = 'Alondra' AND lastName = 'Gross'), 2, 0.1);
 
 -- Adding sample Tutors_has_Courses data
 INSERT INTO `Tutors_has_Courses` (`tutorID`, `courseID`)

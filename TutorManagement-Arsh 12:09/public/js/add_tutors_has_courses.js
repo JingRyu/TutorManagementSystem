@@ -1,12 +1,18 @@
+// Citation for the following CREATE Implementation:
+// Date: 12/10/2024
+// Adapted from:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%205%20-%20Adding%20New%20Data
 let addTutorsHasCoursesForm = document.getElementById('add-tutors-has-courses-form-ajax'); // Updated form ID
 
 addTutorsHasCoursesForm.addEventListener("submit", function (e) {
     e.preventDefault();
 
     // Get input fields
-    let inputTutor = document.getElementById("input-tutor-ajax");
-    let inputCourse = document.getElementById("input-course-ajax");
+    let inputTutor = document.getElementById("tutor-tutorCourse-input");
+    let inputCourse = document.getElementById("course-tutorCourse-input");
 
+    window.location.reload();
+    
     // Retrieve values
     let tutorIDValue = inputTutor.value;
     let courseIDValue = inputCourse.value;
@@ -38,7 +44,7 @@ addTutorsHasCoursesForm.addEventListener("submit", function (e) {
         if (xhttp.readyState == 4 && xhttp.status == 200) {
             // Parse the response to get the new record ID
             let response = JSON.parse(xhttp.responseText);
-            let newRecordID = response.insertId; // Assumes the backend sends the new record ID
+            let newRecordID = response.insertId; 
 
             // Add the new row to the table
             addRowToTable(newRecordID, tutorIDValue, tutorName, courseIDValue, courseName);
@@ -46,12 +52,16 @@ addTutorsHasCoursesForm.addEventListener("submit", function (e) {
             // Clear inputs
             inputTutor.value = '';
             inputCourse.value = '';
+            window.location.reload();
         } else if (xhttp.readyState == 4 && xhttp.status != 200) {
             console.log("There was an error with the input.");
         }
     };
 
     xhttp.send(JSON.stringify(data));
+    setTimeout(() => {
+        window.location.reload();
+    }, 500);
 });
 
 function addRowToTable(recordID, tutorID, tutorName, courseID, courseName) {
@@ -66,7 +76,7 @@ function addRowToTable(recordID, tutorID, tutorName, courseID, courseName) {
     let courseNameCell = document.createElement("TD");
 
     // Set cell values
-    tutorsHasCoursesIDCell.innerText = recordID; // Backend-generated ID
+    tutorsHasCoursesIDCell.innerText = recordID; 
     tutorIDCell.innerText = tutorID;
     tutorNameCell.innerText = tutorName;
     courseIDCell.innerText = courseID;

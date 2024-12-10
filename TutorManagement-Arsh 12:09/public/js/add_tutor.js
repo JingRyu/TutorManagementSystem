@@ -1,3 +1,7 @@
+// Citation for the following CREATE Implementation:
+// Date: 12/10/2024
+// Adapted from:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%205%20-%20Adding%20New%20Data
 // Get the objects we need to modify
 let addTutorForm = document.getElementById('add-tutor-form-ajax');
 
@@ -22,8 +26,8 @@ addTutorForm.addEventListener("submit", function (e) {
     let phoneNumberValue = inputPhoneNumber.value;
     let experienceValue = inputExperience.value;
     let revenueValue = inputRevenueGenerated.value;
-    let ratingValue = parseFloat(inputRating.value); // carry as a decimal
-    let gradeValue = parseFloat(inputGrade.value);
+    let ratingValue = inputRating.value;
+    let gradeValue = inputGrade.value;
 
     // Put our data we want to send in a javascript object
     let data = {
@@ -65,6 +69,9 @@ addTutorForm.addEventListener("submit", function (e) {
 
     // Send the request and wait for the response
     xhttp.send(JSON.stringify(data));
+    setTimeout(() => {
+        window.location.reload();
+    }, 500);
 
 })
 
