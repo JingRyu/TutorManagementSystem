@@ -1,79 +1,86 @@
-// Get the form element
-let updateForm = document.getElementById('update-tutors-has-students-form-ajax');
+let updateTutorsHasStudentsForm = document.getElementById('update-tutors-has-students-form-ajax');
 
-// Add event listener to the form
-updateForm.addEventListener("submit", function (e) {
-    // Prevent the form from submitting
+updateTutorsHasStudentsForm.addEventListener("submit", function (e) {
+
     e.preventDefault();
 
-    // Get form fields to retrieve data
-    let inputRelationshipID = document.getElementById("input-relationship-id");
-    let inputSatisfaction = document.getElementById("studentSatisfactionInput");
-    let inputGradeImprovement = document.getElementById("studentGradeImprovementInput");
+    // Get input fields
+    let inputTutor = document.getElementById("tutor-tutorStudent-update");
+    let inputStudent = document.getElementById("student-tutorStudent-update");
+    let inputSatisfaction = document.getElementById("studentSatisfactionInput-update");
+    let inputGradeImprovement = document.getElementById("studentGradeImprovementInput-update");
 
-    // Retrieve values from the form fields
-    let relationshipIDValue = inputRelationshipID.value;
-    let satisfactionValue = inputSatisfaction.value;
-    let gradeImprovementValue = inputGradeImprovement.value;
+    // Retrieve values
+    let tutorIDValue = inputTutor.value;
+    let studentIDValue = inputStudent.value;
+    let studentSatisfactionValue = inputSatisfaction.value;
+    let studentGradeImprovementValue = inputGradeImprovement.value;
 
-    // Debug: Log input values
-    console.log("Satisfaction value:", satisfactionValue);
-    console.log("Grade improvement value:", gradeImprovementValue);
-
-    // Validate input to ensure a relationship is selected
-    if (!relationshipIDValue) {
-        console.log("Tutor and Student must be selected.");
+    if (!tutorIDValue || !studentIDValue || isNaN(studentSatisfactionValue) || isNaN(studentGradeImprovementValue)) {
+        console.log("Tutor ID:", tutorIDValue);
+        console.log("Student ID:", studentIDValue);
+        console.log("Student Satisfaction:", studentSatisfactionValue);
+        console.log("Student Grade Improvement:", studentGradeImprovementValue);
         return;
     }
 
-    // Prepare data for the AJAX request
     let data = {
-        tutorsHasStudentsID: relationshipIDValue,
-        studentSatisfaction: satisfactionValue || null,
-        studentGradeImprovement: gradeImprovementValue || null
+        tutorID: tutorIDValue,
+        studentID: studentIDValue,
+        studentSatisfaction: studentSatisfactionValue,
+        studentGradeImprovement: studentGradeImprovementValue
     };
+   
+    console.log("Data to be sent:", data);
 
-    // Debug: Log data being sent
-    console.log("Sending request to /put-tutors-has-students-ajax with data:", data);
-
-    // Set up AJAX request
+    // AJAX request
     var xhttp = new XMLHttpRequest();
     xhttp.open("PUT", "/put-tutors-has-students-ajax", true);
     xhttp.setRequestHeader("Content-type", "application/json");
 
-    // Handle the response
     xhttp.onreadystatechange = () => {
-        if (xhttp.readyState == 4 && xhttp.status == 200) {
-            console.log("Update successful");
-            // Optionally update the DOM
-            updateRow(xhttp.response, relationshipIDValue);
-        } else if (xhttp.readyState == 4 && xhttp.status != 200) {
-            console.log("There was an error with the input.");
+        if (xhttp.readyState == 4) {
+            if (xhttp.status == 200) {
+                try {
+                    // omit the error, keeps getting error here no solve solution
+                    let response = JSON.parse(xhttp.response);
+                    updateRow(response, tutorIDValue, studentIDValue);
+                    console.log("Update successful");
+                } catch (e) {
+                    console.log("Non-JSON:", xhttp.response);
+                }
+    
+                // Clear input fields
+                inputTutor.value = '';
+                inputStudent.value = '';
+                inputSatisfaction.value = '';
+                inputGradeImprovement.value = '';
+            } else {
+                console.log("error", xhttp.status);
+            }
         }
     };
 
-    // Send the request
     xhttp.send(JSON.stringify(data));
+    setTimeout(() => {
+        window.location.reload();
+    }, 500);
+
 });
 
-// Function to update the row in the table
-function updateRow(data, relationshipID) {
-    let parsedData = JSON.parse(data);
-
-    // Get the table
+function updateRow(data, tutorIDValue, studentIDValue) {
     let table = document.getElementById("tutors-has-students-table");
 
     for (let i = 0, row; row = table.rows[i]; i++) {
-        // Match the row with the correct relationship ID
-        if (table.rows[i].getAttribute("data-relationship-id") == relationshipID) {
-            // Update the columns for satisfaction and grade improvement
-            let satisfactionCell = row.getElementsByTagName("td")[5];
-            let gradeImprovementCell = row.getElementsByTagName("td")[6];
+        if (
+            table.rows[i].getAttribute("data-tutorStudent-tutorID") == tutorIDValue &&
+            table.rows[i].getAttribute("data-tutorStudent-studentID") == studentIDValue
+        ) {
+            let updateRowIndex = table.rows[i];
 
-            satisfactionCell.innerHTML = parsedData.studentSatisfaction || "N/A";
-            gradeImprovementCell.innerHTML = parsedData.studentGradeImprovement || "N/A";
-
-            break;
+            // Update student satisfaction and grade improvement cells
+            updateRowIndex.cells[5].innerText = data[0].studentSatisfaction;
+            updateRowIndex.cells[6].innerText = data[0].studentGradeImprovement;
         }
     }
 }

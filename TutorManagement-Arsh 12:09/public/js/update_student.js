@@ -1,4 +1,8 @@
-// Get the objects we need to modify
+// Citation for the following UPDATE Implementation:
+// Date: 12/10/2024
+// Adapted from:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%208%20-%20Dynamically%20Updating%20Data
+
 let updateStudentForm = document.getElementById('update-student-form-ajax');
 
 // Modify the objects we need
@@ -19,7 +23,6 @@ updateStudentForm.addEventListener("submit", function (e) {
     let tuitionValue = inputTuition.value;
     
     
-    // currently the database table for bsg_people does not allow updating values to NULL
     // so we must abort if being bassed NULL for homeworld
 
 
@@ -37,19 +40,35 @@ updateStudentForm.addEventListener("submit", function (e) {
 
     // Tell our AJAX request how to resolve
     xhttp.onreadystatechange = () => {
-        if (xhttp.readyState == 4 && xhttp.status == 200) {
-
-            // Add the new data to the table
-            updateRow(xhttp.response, fullNameValue);
-
+        if (xhttp.readyState == 4) {
+            if (xhttp.status == 200) {
+                try {
+                    // Attempt to parse JSON
+                    let response = JSON.parse(xhttp.response);
+                    updateRow(response, tutorIDValue, studentIDValue);
+                    console.log("Update successful");
+                } catch (e) {
+                    // Handle non-JSON response
+                    console.log("Non-JSON response:", xhttp.response);
+                    alert("Update was successful but no JSON data returned.");
+                }
+    
+                // Clear input fields
+                inputTutor.value = '';
+                inputStudent.value = '';
+                inputSatisfaction.value = '';
+                inputGradeImprovement.value = '';
+            } else {
+                console.log("There was an error with the input. Status:", xhttp.status);
+            }
         }
-        else if (xhttp.readyState == 4 && xhttp.status != 200) {
-            console.log("There was an error with the input.")
-        }
-    }
+    };
 
     // Send the request and wait for the response
     xhttp.send(JSON.stringify(data));
+    setTimeout(() => {
+        window.location.reload();
+    }, 500);
 
 })
 

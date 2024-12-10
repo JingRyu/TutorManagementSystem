@@ -1,3 +1,8 @@
+// Citation for the following DELETE Implementation:
+// Date: 12/10/2024
+// Adapted from:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%207%20-%20Dynamically%20Deleting%20Data
+
 function deleteStudent(studentID) {
     let link = '/delete-student-ajax/';
     let data = {

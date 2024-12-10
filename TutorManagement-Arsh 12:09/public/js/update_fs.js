@@ -1,4 +1,8 @@
-// Get the objects we need to modify
+// Citation for the following UPDATE Implementation:
+// Date: 12/10/2024
+// Adapted from:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%208%20-%20Dynamically%20Updating%20Data
+
 let updateFSForm = document.getElementById('update-fs-form-ajax');
 
 // Modify the objects we need
@@ -25,9 +29,8 @@ updateFSForm.addEventListener("submit", function (e) {
     let revenueValue = inputRevenue.value;
     let commissionValue = inputCommission.value;
     let costValue = inputCost.value;
-    let renewalValue = parseFloat(inputRenewal.value);
+    let renewalValue = inputRenewal.value;
     
-    // currently the database table for bsg_people does not allow updating values to NULL
     // so we must abort if being bassed NULL for homeworld
 
 
@@ -63,6 +66,9 @@ updateFSForm.addEventListener("submit", function (e) {
 
     // Send the request and wait for the response
     xhttp.send(JSON.stringify(data));
+    setTimeout(() => {
+        window.location.reload();
+    }, 500);
 
 })
 

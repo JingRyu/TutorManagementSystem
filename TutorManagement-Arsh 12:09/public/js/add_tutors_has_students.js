@@ -1,3 +1,7 @@
+// Citation for the following CREATE Implementation:
+// Date: 12/10/2024
+// Adapted from:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%205%20-%20Adding%20New%20Data
 
 let addTutorsHasStudentsForm = document.getElementById('add-tutors-has-students-form-ajax');
 
@@ -5,21 +9,23 @@ addTutorsHasStudentsForm.addEventListener("submit", function (e) {
     
     e.preventDefault();
 
-    let inputTutor = document.getElementById("input-tutor-ajax");
-    let inputStudent = document.getElementById("input-student-ajax");
+    // Get input fields
+    let inputTutor = document.getElementById("tutor-tutorStudent-input");
+    let inputStudent = document.getElementById("student-tutorStudent-input");
     let inputSatisfaction = document.getElementById("studentSatisfactionInput");
     let inputGradeImprovement = document.getElementById("studentGradeImprovementInput");
 
-    let tutorIDValue = inputTutor.value; // Selected tutor ID
-    let studentIDValue = inputStudent.value; // Selected student ID
+    // Retrieve values
+    let tutorIDValue = inputTutor.value; 
+    let studentIDValue = inputStudent.value; 
     let studentSatisfactionValue = inputSatisfaction.value;
     let studentGradeImprovementValue = inputGradeImprovement.value;
 
     if (!tutorIDValue || !studentIDValue || !studentSatisfactionValue || !studentGradeImprovementValue) {
         console.log("Tutor ID:", tutorIDValue);
-console.log("Student ID:", studentIDValue);
-console.log("Student Satisfaction:", studentSatisfactionValue);
-console.log("Student Grade Improvement:", studentGradeImprovementValue);
+    console.log("Student ID:", studentIDValue);
+    console.log("Student Satisfaction:", studentSatisfactionValue);
+    console.log("Student Grade Improvement:", studentGradeImprovementValue);
         return;
     }
 
@@ -49,6 +55,7 @@ console.log("Student Grade Improvement:", studentGradeImprovementValue);
             inputStudent.value = '';
             inputSatisfaction.value = '';
             inputGradeImprovement.value = '';
+            window.location.reload();
         }
         else if (xhttp.readyState == 4 && xhttp.status != 200) {
             console.log("There was an error with the input.");
@@ -56,6 +63,9 @@ console.log("Student Grade Improvement:", studentGradeImprovementValue);
     };
 
     xhttp.send(JSON.stringify(data));
+    setTimeout(() => {
+        window.location.reload();
+    }, 500);
 });
 
 addRowToTable = (data, tutorName, studentName) => {
@@ -63,6 +73,7 @@ addRowToTable = (data, tutorName, studentName) => {
 
     let newRowIndex = currentTable.rows.length;
 
+    // Create new row
     let row = document.createElement("TR");
     let tutorsHasStudentsIDCell = document.createElement("TD");
     let tutorIDCell = document.createElement("TD");
@@ -87,6 +98,7 @@ addRowToTable = (data, tutorName, studentName) => {
     row.appendChild(studentNameCell);
     row.appendChild(studentSatisfactionCell);
     row.appendChild(studentGradeImprovementCell);
-
+    
+    // Append the new row to the table
     currentTable.appendChild(row);
 };

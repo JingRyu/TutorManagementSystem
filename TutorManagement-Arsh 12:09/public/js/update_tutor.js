@@ -1,3 +1,7 @@
+// Citation for the following UPDATE Implementation:
+// Date: 12/10/2024
+// Adapted from:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%208%20-%20Dynamically%20Updating%20Data
 
 // Get the objects we need to modify
 let updateTutorForm = document.getElementById('update-tutor-form-ajax');
@@ -13,18 +17,13 @@ updateTutorForm.addEventListener("submit", function (e) {
     let inputNumber = document.getElementById("input-number-update");
     let inputExperience = document.getElementById("input-experience-update");
     let inputRevenue = document.getElementById("input-revenue-update");
-    let inputSatisfaction = document.getElementById("input-satisfaction-update"); // carry as a decimal
-    let inputGrade = document.getElementById("input-grade-update");
 
     // Get the values from the form fields
     let fullNameValue = inputFullName.value;
     let numberValue = inputNumber.value;
     let experienceValue = inputExperience.value;
     let revenueValue = inputRevenue.value;
-    let satisfactionValue = parseFloat(inputSatisfaction.value);// carry as a decimal
-    let gradeValue = parseFloat(inputGrade.value);
     
-    // currently the database table for bsg_people does not allow updating values to NULL
     // so we must abort if being bassed NULL for homeworld
 
 
@@ -34,8 +33,6 @@ updateTutorForm.addEventListener("submit", function (e) {
         number: numberValue,
         experience: experienceValue,
         revenue: revenueValue,
-        satisfaction: satisfactionValue,
-        grade: gradeValue
     }
     
     // Setup our AJAX request
@@ -44,6 +41,7 @@ updateTutorForm.addEventListener("submit", function (e) {
     xhttp.setRequestHeader("Content-type", "application/json");
 
     // Tell our AJAX request how to resolve
+    
     xhttp.onreadystatechange = () => {
         if (xhttp.readyState == 4 && xhttp.status == 200) {
 
@@ -58,6 +56,9 @@ updateTutorForm.addEventListener("submit", function (e) {
 
     // Send the request and wait for the response
     xhttp.send(JSON.stringify(data));
+    setTimeout(() => {
+        window.location.reload();
+    }, 500);
 
 })
 

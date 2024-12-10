@@ -5,7 +5,7 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 </head>
 
-    <h1>TeachMaster</h1>
+    <h2>Courses</h2>
     <nav>
     <a href="/">HomePage</a>
     <a href="/tutor">Tutors</a>
@@ -14,18 +14,22 @@
     <a href="/FS">Financial Summaries</a>
     <a href="/tutor-course">Courses Taught by Tutor</a>
     <a href="/tutor-student">Students Taught by Tutor</a>
-    <a href="/pages/Courses_has_students.html">Students Enrolled in Course</a>
+    <a href="/course-student">Students Enrolled in Course</a>
     </nav>
 
+{{!-- Citation for the following DELETE:
+Date: 12/10/2024
+Adapted from:
+Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%207%20-%20Dynamically%20Deleting%20Data --}}
 {{!-- Create a table --}}
 <body>
-<h2><strong>Courses</strong></h2>
-<table id="course-table">
+<table id="course-table" style="width:1500x">
         <tr>
            <th>ID</th>
             <th>Course Name</th>
             <th>Course Cost in US Dollars($)</th>
             <th>Total Class Hours (per price)</th>
+            <th>Delete</th>
         </tr>
 
         {{!-- For each row, print in order --}}
@@ -42,10 +46,14 @@
 <script src="/js/delete_course.js"></script>
 
 
+{{!-- Citation for the following ADD:
+Date: 12/10/2024
+Adapted from:
+Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%205%20-%20Adding%20New%20Data --}}
 {{!-- Form to add a record to the table using AJAX --}}
-<p>&nbsp;</p>
-<p>To add a new Course, please enter all the information below and click 'Submit'!</p>
 <form  id="add-course-form-ajax">
+         <fieldset style="width:1000px">
+        <legend><strong>Add Course</strong></legend>
 
     <label for="input-name">Course Name: </label>
     <input type="text" name="input-name" id="input-name">
@@ -57,15 +65,21 @@
     <input type="number" name="input-hours" id="input-hours">
 
     <input type="submit">
+        </fieldset>
+    
+    <p></p>
 </form>
 {{!-- Embed our javascript to handle the DOM manipulation and AJAX request --}}
 <script src="/js/add_course.js"></script>
 
-{{!-- Embed our javascript to handle the DOM manipulation and AJAX request --}}
-
-<p>Select a Course and update its information.</p>
+{{!-- Citation for the following UPDATE:
+Date: 12/10/2024
+Adapted from:
+Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%208%20-%20Dynamically%20Updating%20Data --}}
+{{!-- Select a Course and update its information.--}}
 <form id="update-course-form-ajax">
-
+     <fieldset style="width:1000px">
+        <legend><strong>Update Course</strong></legend>
     <label for="input-course">Course name: </label>
     <select name="input-course" id="input-course-update">
         <option value="test">Select a Course</option>
@@ -81,7 +95,7 @@
     <input type="number" name="input-hours" id="input-hours-update">
         
     <input type="submit">
-
+</fieldset>
 </form>
 
 <script src="/js/update_course.js"></script>
