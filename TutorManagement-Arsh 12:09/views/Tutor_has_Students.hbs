@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+</head>
+<body>
+    <h1>TeachMaster</h1>
+    <nav>
+    <a href="/">HomePage</a>
+    <a href="/tutor">Tutors</a>
+    <a href="/student">Students</a>
+    <a href="/course">Courses</a>
+    <a href="/FS">Financial Summaries</a>
+    <a href="/tutor-course">Courses Taught by Tutor</a>
+    <a href="/tutor-student">Students Taught by Tutor</a>
+    <a href="/pages/Courses_has_students.html">Students Enrolled in Course</a>
+    </nav>
+
+    <table id="tutors-has-students-table">
+     <thead>
+        <tr>
+            <th>tutorsHasStudentsID</th>
+            <th>Tutor ID</th>
+            <th>Tutor's Name</th>
+            <th>Student ID</th>
+            <th>Student's Name</th>
+            <th>Student Satisfaction</th>
+            <th>Student Grade Improvement</th>
+            <th>delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each data}}
+        <tr data-value={{this.tutorsHasStudentsID}}>
+            <td>{{this.tutorsHasStudentsID}}</td>
+            <td>{{this.tutorID}}</td>
+            <td>{{this.tutorName}}</td>
+            <td>{{this.studentID}}</td>
+            <td>{{this.studentName}}</td>
+            <td>{{this.studentSatisfaction}}</td>
+            <td>{{this.studentGradeImprovement}}</td>
+            <td><button onclick="deleteTutorsHasStudents({{this.tutorsHasStudentsID}})">Delete</button></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+<script src="/js/delete_tutors_has_students.js"></script>
+
+
+
+{{!-- Form to add a record to the table  --}}
+<p>To add a new tutors-has-students record, please enter their information below and click 'Submit'!</p>
+<form id="add-tutors-has-students-form-ajax">
+    Tutor: 
+    <select name="input-tutor" id="input-tutor-ajax">
+        <option value="">Select a Tutor</option>
+        {{#each tutors}}
+        <option value="{{this.tutorID}}">{{this.tutorName}}</option>
+        {{/each}}
+    </select>
+
+    Student: 
+    <select name="input-student" id="input-student-ajax">
+        <option value="">Select a Student</option>
+        {{#each students}}
+        <option value="{{this.studentID}}">{{this.studentName}}</option>
+        {{/each}}
+    </select>
+
+<label for="studentSatisfactionInput">studentSatisfaction: </label>
+<input type="number" name="studentSatisfactionInput" id="studentSatisfactionInput" step="0.1">
+
+    <label for="studentGradeImprovementInput">studentGradeImprovement: </label>
+    <input type="number" name="studentGradeImprovementInput" id="studentGradeImprovementInput" step="0.1">
+
+    <input type="submit">
+</form>
+
+
+
+<p>Select a Tutor-Student relationship and update their information.</p>
+<form id="update-tutors-has-students-form-ajax">
+
+    <label for="input-relationship-id">Tutor-Student Relationship:</label>
+    <select name="input-relationship-id" id="input-relationship-id" required>
+        <option value="">Select a Relationship</option>
+        {{#each data}}
+        <option value="{{this.tutorsHasStudentsID}}">
+            Tutor: {{this.tutorName}} - Student: {{this.studentName}}
+        </option>
+        {{/each}}
+    </select>
+
+    <label for="studentSatisfactionInput">studentSatisfaction: </label>
+    <input type="number" name="studentSatisfactionInput" id="studentSatisfactionInput" step="0.1">
+
+        <label for="studentGradeImprovementInput">studentGradeImprovement: </label>
+        <input type="number" name="studentGradeImprovementInput" id="studentGradeImprovementInput" step="0.1">
+
+        <input type="submit">
+    </form>
+
+<script src="/js/update_tutors_has_students.js"></script>
+
+
+
+
+
+{{!-- Embed our javascript to handle the DOM manipulation and AJAX request --}}
+<script src="/js/add_tutors_has_students.js"></script>
+
+<p>Search by tutor's last name using the field below. Partial last names are OK too!</p>
+<form id="search-tutors-has-students-html" method='GET' action='/tutor-student'>
+    <label for="input-lastName">Search by Last Name: </label>
+    <input type="text" name="lastName" id="input-lastName-html-search">
+    
+    <input type="submit">
+    <a href='/tutor-student'><button>Reset</button></a>
+</form> 
+</html>
+
+

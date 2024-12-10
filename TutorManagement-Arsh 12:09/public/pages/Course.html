@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="/css/style.css" rel="stylesheet" type="text/css" /> 
+  <h1>TeachMaster</h1>
+  <nav>
+    <a href="/">HomePage</a>
+    <a href="/pages/Tutor.html">Tutors</a>
+    <a href="/pages/Student.html">Students</a>
+    <a href="/pages/Course.html">Courses</a>
+    <a href="/pages/FS.html">Financial Summaries</a>
+    <a href="/pages/Tutor_has_Courses.html">Courses Taught by Tutor</a>
+    <a href="/tutor-student">Students Taught by Tutor</a>
+    <a href="/pages/Courses_has_students.html">Students Enrolled in Course</a>
+  </nav>
+  <script language="JavaScript">
+		function showPage(dowhat) {
+			/*
+			* four DIVS: browse, insert, update, delete
+			* this function sets one visible the others not
+			*/
+			if (dowhat == 'insert'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'block';
+				document.getElementById('update').style.display = 'none';
+				document.getElementById('delete').style.display = 'none';
+			}
+			else if (dowhat == 'update'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'none';
+				document.getElementById('update').style.display = 'block';
+				document.getElementById('delete').style.display = 'none';
+			}
+			else if (dowhat == 'delete'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'none';
+				document.getElementById('update').style.display = 'none';
+				document.getElementById('delete').style.display = 'block';
+			}
+			else { //by default display browse
+				document.getElementById('browse').style.display = 'block';
+				document.getElementById('insert').style.display = 'none';
+				document.getElementById('update').style.display = 'none';
+				document.getElementById('delete').style.display = 'none';
+			}
+		}
+    function newCourse() { showPage('insert');}
+    function deleteCourse(courseID) {showPage('delete');}
+    function updateCourse(courseID) {showPage('update');}
+    function browseCourse() {showPage ('browse');}
+    </script>
+</head>
+
+<body onload="browseCourse()">
+<div id="browse">
+    <h2><strong>Courses</strong></h2>
+    <a href="#" onclick="newCourse()">Add New Course</a>
+    <table>
+            <tr>
+              <th>ID</th>
+              <th>Course Name</th>
+              <th>Course Cost in US Dollars($)</th>
+              <th>Total Class Hours (per price)</th>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>Algebra 1</td>
+              <td>5000</td>
+              <td>40</td>
+              <td><a href="#" onclick = "updateCourse('this.courseID')">Edit</a></td>
+          <td><a href="#" onclick="deleteCourse('this.courseID')">Delete</a></td>
+            </tr>
+            <tr>
+               <td>2</td>
+               <td>Biology</td>
+               <td>6000</td>
+               <td>60</td>
+               <td><a href="#" onclick = "updateCourse('this.courseID')">Edit</a></td>
+          <td><a href="#" onclick="deleteCourse('this.courseID')">Delete</a></td>
+            </tr>
+            <tr>
+               <td>3</td>
+               <td>US History</td>
+               <td>5500</td>
+               <td>30</td>
+               <td><a href="#" onclick = "updateCourse('this.courseID')">Edit</a></td>
+          <td><a href="#" onclick="deleteCourse('this.courseID')">Delete</a></td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Geometry</td>
+                <td>4500</td>
+                <td>40</td>
+                <td><a href="#" onclick = "updateCourse('this.courseID')">Edit</a></td>
+          <td><a href="#" onclick="deleteCourse('this.courseID')">Delete</a></td>
+            </tr>
+    </table>
+</div>
+
+<!-- insert -->
+<p>&nbsp;</p>
+<div id="insert">
+      <form method="POST" id="addCourse">
+        <legend><strong>Add Course</strong></legend>
+        <fieldset class="fields">
+          <input type="hidden" name="courseID" id="updatecourseID" value="1">
+          <label> Course Name </label> 
+          <select id="courses" name="courses">
+            <option value="1">Algebra 1</option>
+            <option value="2">Biology</option>
+            <option value="3">US History</option>
+            <option value="4">Geometry</option>
+        </select>
+          <label> Course Price </label> <input type="number" name="price">
+          <label> Total Hours </label> <input type="number" name="hours">
+        </fieldset>
+        <input class="btn" type="submit" id="addCourse" value="Add Course">
+          <input class="btn" type="button" value="cancel" onClick="browseCourse()">
+      </form>
+</div>
+<!-- insert -->
+
+<!-- update -->
+<p>&nbsp;</p>
+<div id="update">
+    <form method="POST" id="UpdateCourse" >
+        <legend><strong>Update Course</strong></legend>
+          <fieldset class="fields">
+          <input type="hidden" name="courseID" id="updatecourseID" value="1">
+          <label> ID: </label> 1
+          <label> Course Name </label> <input type="text" name="name" value = "Algebra 1">
+          <label> Course Price </label> <input type="number" name="price" value = "5000">
+          <label> Total Hours </label> <input type="number" name="hours" value = "40">
+        </fieldset>
+        <input class="btn" type="submit" id="UpdateSaveCourse" value="Save Update Course">
+          <input class="btn" type="button" value="cancel" onClick="browseCourse()">
+	</form> 
+</div>
+<!-- update -->
+
+<!-- delete -->
+<p>&nbsp;</p>
+<div id="delete" style="display: block">
+  <form method="POST" id="deleteCourse">
+      <legend><strong>Delete Course</strong></legend>
+          <fieldset class="fields">
+          <p>Are you sure you wish to delete the following?</p> 
+          <input type="hidden" name="courseID" id="deletecourseID" value="1">
+          <label><strong>ID:</strong></label> 1
+            <label> <strong>Course Name</strong> </label> Algebra 1
+          </fieldset>
+          <input class="btn" type="submit" id="DeleteCourse" value="Delete Course">
+                <input class="btn" type="button" value="cancel" onClick="browseCourse()">
+    </form> 
+</div>
+      <!-- delete -->
+</body>
+</html>
