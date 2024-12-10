@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+</head>
+
+<h2>Courses Taught by Tutor</h2>
+<nav>
+    <a href="/">HomePage</a>
+    <a href="/tutor">Tutors</a>
+    <a href="/student">Students</a>
+    <a href="/course">Courses</a>
+    <a href="/FS">Financial Summaries</a>
+    <a href="/tutor-course">Courses Taught by Tutor</a>
+    <a href="/tutor-student">Students Taught by Tutor</a>
+    <a href="/course-student">Students Enrolled in Course</a>
+</nav>
+
+{{!-- Citation for the following DELETE:
+Date: 12/10/2024
+Adapted from:
+Source URL:
+https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%207%20-%20Dynamically%20Deleting%20Data --}}
+{{!-- Create a table --}}
+
+<body>
+    <table id="tutors-has-courses-table">
+        <thead>
+            <tr>
+                <th>tutorsHasCourses ID</th>
+                <th>Tutor ID</th>
+                <th>Tutor's Name</th>
+                <th>Course ID</th>
+                <th>Course's Name</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{!-- For each row, print in order --}}
+            {{#each data}}
+            <tr data-value={{this.tutorsHasCoursesID}}>
+                <td>{{this.tutorsHasCoursesID}}</td>
+                <td>{{this.tutorID}}</td>
+                <td>{{this.tutorName}}</td>
+                <td>{{this.courseID}}</td>
+                <td>{{this.courseName}}</td>
+                <td><button onclick="deleteTutorsHasCourses({{this.tutorsHasCoursesID}})">Delete</button></td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+    <script src="/js/delete_tutors_has_courses.js"></script>
+
+
+
+    {{!-- Citation for the following ADD:
+    Date: 12/10/2024
+    Adapted from:
+    Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%205%20-%20Adding%20New%20Data
+    --}}
+    {{!-- Form to add a record to the table using AJAX --}}
+    <form id="add-tutors-has-courses-form-ajax">
+        <fieldset style="width:1000px">
+            <legend><strong>Add Tutors-has-Courses Record</strong></legend>
+            Tutor:
+            <select name="input-tutor" id="tutor-tutorCourse-input">
+                <option value="">Select a Tutor</option>
+                {{#each tutors}}{{!-- in app.js, relates to the rows tutors, allows data drom Tutors entity to be
+                populated here --}}
+                <option value="{{this.tutorID}}">{{this.tutorName}}</option>
+                {{/each}}
+            </select>
+
+            Course:
+            <select name="input-course" id="course-tutorCourse-input">
+                <option value="">Select a Course</option>
+                {{#each courses}}
+                <option value="{{this.courseID}}">{{this.courseName}}</option>
+                {{/each}}
+            </select>
+
+            <input type="submit">
+        </fieldset>
+
+        <p></p>
+    </form>
+
+
+
+    {{!-- Embed our javascript to handle the DOM manipulation and AJAX request --}}
+    <script src="/js/add_tutors_has_courses.js"></script>
+
+    {{!-- Citation for the following SEARCH:
+    Date: 12/10/2024
+    Adapted from:
+    Source URL:
+    https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%206%20-%20Dynamically%20Filling%20Dropdowns%20and%20Adding%20a%20Search%20Box
+    --}}
+
+    <form id="search-tutors-has-courses-html" method='GET' action='/tutor-course'>
+        <fieldset style="width:1000px">
+            <legend><strong>Search All Courses Taught by A Tutor</strong></legend>
+            Search by tutor's last name using the field below. Partial last names are OK too!
+            <p></p>
+            <label for="input-lastName">Search by Tutor's Last Name: </label>
+            <input type="text" name="lastName" id="input-lastName-html-search">
+
+            <input type="submit">
+            <a href='/tutor-course'><button>Reset</button></a>
+        </fieldset>
+
+
+    </form>
+
+</html>

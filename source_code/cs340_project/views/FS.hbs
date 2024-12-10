@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+</head>
+
+    <h2>Financial Summaries</h2>
+    <nav>
+    <a href="/">HomePage</a>
+    <a href="/tutor">Tutors</a>
+    <a href="/student">Students</a>
+    <a href="/course">Courses</a>
+    <a href="/FS">Financial Summaries</a>
+    <a href="/tutor-course">Courses Taught by Tutor</a>
+    <a href="/tutor-student">Students Taught by Tutor</a>
+    <a href="/course-student">Students Enrolled in Course</a>
+    </nav>
+
+{{!-- Citation for the following DELETE:
+Date: 12/10/2024
+Adapted from:
+Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%207%20-%20Dynamically%20Deleting%20Data --}}
+{{!-- Create a table --}}
+<body>
+<table id="fs-table" style="width:1500x" >
+        <tr>
+           <th>Financial Summary ID</th>
+           <th>Tutor</th>
+            <th>Financial Period</th>
+            <th>Contract Rate ($)</th>
+            <th>Revenue Generated ($)</th>
+            <th>Commision Due</th>
+            <th>Course Cost in USD ($)</th>
+            <th>Renewal Rate</th>
+            <th>Delete</th>
+        </tr>
+
+        {{!-- For each row, print in order --}}
+        {{#each financialSummaries}} {{!-- in app.js, relates to the rows financialSummaries --}}
+        <tr data-value={{this.financialSummaryID}}>
+            <td>{{this.financialSummaryID}}</td>
+             <td>
+                    {{this.firstName}} {{this.lastName}}
+            </td>
+            <td>{{this.financialPeriod}}</td>
+            <td>{{this.contractRate}}</td>
+            <td>{{this.revenueGenerated}}</td>
+            <td>{{this.commissionDue}}</td>
+            <td>{{this.courseCost}}</td>
+            <td>{{this.renewalRate}}</td>
+            <td><button onclick="deleteFS({{this.financialSummaryID}})">Delete</button></td>
+        </tr>
+        {{/each}}
+</table>
+<script src="/js/delete_fs.js"></script>
+
+{{!-- Citation for the following ADD:
+Date: 12/10/2024
+Adapted from:
+Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%205%20-%20Adding%20New%20Data --}}
+{{!-- Form to add a record to the table using AJAX --}}
+<form  id="add-fs-form-ajax">
+     <fieldset style="width:1000px">
+        <legend><strong>Add Financial Summary</strong></legend>
+    <label for="input-tutorID">Tutor: </label>
+    <select name="input-fullname" id="input-fullname">
+        <option value="test">Select a Tutor</option>
+        {{#each tutors}} {{!-- in app.js, relates to the rows tutors, allows data drom Tutors entity to be populated here --}}
+        <option value="{{this.tutorID}}">{{this.firstName}} {{this.lastName}}</option>
+        {{/each}}
+    </select>
+    
+    <label for="input-quarter">Quarter Period: </label>
+    <input type="text" name="input-quarter" id="input-quarter">
+
+    <label for="input-rate">Contract Rate: </label>
+    <input type="number" name="input-rate" id="input-rate">
+
+    <label for="input-revenue">Revenue Generated: </label>
+    <input type="number" name="input-revenue" id="input-revenue">
+    <p></p>
+    <label for="input-commission">Commission Due: </label>
+    <input type="number" name="input-commission" id="input-commission">
+    
+
+    <label for="input-Cost">Course Cost: </label>
+    <input type="number" name="input-Cost" id="input-Cost">
+
+    <label for="input-renewal">Renewal Rate: </label>
+    <input type="number" name="input-renewal" id="input-renewal">
+    <input type="submit" align="center">
+    </fieldset>
+    
+    <p></p>
+</form>
+{{!-- Embed our javascript to handle the DOM manipulation and AJAX request --}}
+<script src="/js/add_fs.js"></script>
+
+{{!-- Citation for the following UPDATE:
+Date: 12/10/2024
+Adapted from:
+Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%208%20-%20Dynamically%20Updating%20Data --}}
+<form id="update-fs-form-ajax">
+     <fieldset style="width:1000px">
+        <legend><strong>Update Financial Summary</strong></legend>
+    <label for="input-fs-id">Financial ID: </label>
+    <select name="input-fs-id" id="input-fs-id-update">
+        <option value="test_1">Select Financial Summary</option>
+        {{#each financialSummaries}}
+        <option value="{{this.financialSummaryID}}">{{this.financialSummaryID}}</option>
+        {{/each}}
+    </select>
+
+    <label for="input-fs">Tutor name: </label>
+    <select name="input-fs" id="input-fs-update">
+        <option value="test">Select a Person</option>
+        {{#each tutors}}
+        <option value="{{this.tutorID}}">{{this.firstName}} {{this.lastName}}</option>
+        {{/each}}
+    </select>
+
+    <label for="input-quarter">Quarter Period: </label>
+    <input type="text" name="input-quarter" id="input-quarter-update">
+
+    <label for="input-rate">Contract Rate: </label>
+    <input type="number" name="input-rate" id="input-rate-update">
+    <p></p>
+
+    <label for="input-revenue">Revenue Generated: </label>
+    <input type="number" name="input-revenue" id="input-revenue-update">
+
+    <label for="input-commission">Commission Due: </label>
+    <input type="number" name="input-commission" id="input-commission-update">
+
+    <label for="input-Cost">Course Cost: </label>
+    <input type="number" name="input-Cost" id="input-Cost-update">
+    <p></p>
+
+    <label for="input-renewal">Renewal Rate: </label>
+    <input type="number" name="input-renewal" id="input-renewal-update">
+        
+    <input type="submit">
+    </fieldset>
+
+</form>
+
+<script src="/js/update_fs.js"></script>
